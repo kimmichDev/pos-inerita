@@ -2,7 +2,7 @@ require('./bootstrap');
 
 // Import modules...
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
+import { createInertiaApp, Link } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import AppLayout from "../js/Layouts/AppLayout.vue";
 
@@ -17,6 +17,7 @@ createInertiaApp({
     },
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
+            .component("Link", Link)
             .use(plugin)
             .mixin({ methods: { route } })
             .mount(el);
