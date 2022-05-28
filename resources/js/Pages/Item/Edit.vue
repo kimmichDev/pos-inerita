@@ -1,5 +1,5 @@
 <template>
-    <Head title="create item"></Head>
+    <Head title="Edit item"></Head>
     <div class="row justify-content-center mb-3">
         <div class="col-12 col-md-6">
             <div class="border p-3 shadow rounded">
@@ -19,7 +19,7 @@
                         </li>
                         <li class="breadcrumb-item active">
                             <i class="bi bi-plus-circle-fill"></i>
-                            Create
+                            Edit
                         </li>
                     </ol>
                 </nav>
@@ -29,7 +29,7 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-6">
             <div class="card">
-                <h5 class="card-header mb-3">Create item</h5>
+                <h5 class="card-header mb-3">Edit item</h5>
                 <PhotoUploadUi
                     @open-input="openInput"
                     :errors="errors"
@@ -102,7 +102,7 @@
                             @change="loadPhoto"
                             @input="form.photo = $event.target.files[0]"
                         />
-                        <button class="btn btn-primary">Create Now</button>
+                        <button class="btn btn-primary">Edit Now</button>
                     </form>
                 </div>
             </div>
@@ -115,7 +115,6 @@ import PhotoUploadUi from "../../Shared/PhotoUploadUi";
 import { loadPhoto } from "../../Composables/loadPhoto";
 import { Head, useForm } from "@inertiajs/inertia-vue3";
 import { showToast } from "../../Composables/showToast";
-import { resetPhoto } from "../../Composables/resetPhoto";
 export default {
     components: { PhotoUploadUi, Head },
     props: ["item", "categories", "errors"],
@@ -136,7 +135,6 @@ export default {
                 preserveScroll: true,
                 onSuccess: () => {
                     form.reset();
-                    resetPhoto();
                     showToast("success", "Edited sucessfully");
                 },
             });

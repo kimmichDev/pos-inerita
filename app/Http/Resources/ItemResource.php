@@ -16,7 +16,7 @@ class ItemResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->name,
+            "name" => ucfirst($this->name),
             "price" => $this->price,
             "category_id" => $this->category_id,
             "category" => $this->category,

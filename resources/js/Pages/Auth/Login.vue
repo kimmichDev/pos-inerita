@@ -45,6 +45,7 @@
                             id="remember_me"
                             name="remember"
                             v-model:checked="form.remember"
+                            class="me-2"
                         />
 
                         <label class="custom-control-label" for="remember_me">

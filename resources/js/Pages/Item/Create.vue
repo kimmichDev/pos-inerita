@@ -98,7 +98,17 @@
                             @change="loadPhoto"
                             @input="form.photo = $event.target.files[0]"
                         />
-                        <button class="btn btn-primary">Edit Now</button>
+
+                        <button class="btn btn-primary">
+                            <div
+                                v-show="form.processing"
+                                class="spinner-border spinner-border-sm"
+                                role="status"
+                            >
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            Create Now
+                        </button>
                     </form>
                 </div>
             </div>

@@ -4059,7 +4059,7 @@ progress {
   min-height: calc(1.5em + 1rem + 2px);
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
-  border-radius: 0.3rem;
+  border-radius: 2rem;
 }
 .form-control-lg::-webkit-file-upload-button {
   padding: 0.5rem 1rem;
@@ -4163,7 +4163,7 @@ textarea.form-control-lg {
   padding-bottom: 0.5rem;
   padding-left: 1rem;
   font-size: 1.25rem;
-  border-radius: 0.3rem;
+  border-radius: 2rem;
 }
 
 .form-check {
@@ -4483,7 +4483,7 @@ textarea.form-control-lg {
 .input-group-lg > .btn {
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
-  border-radius: 0.3rem;
+  border-radius: 2rem;
 }
 
 .input-group-sm > .form-control,
@@ -5186,7 +5186,7 @@ textarea.form-control-lg {
 .btn-lg, .btn-group-lg > .btn {
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
-  border-radius: 0.3rem;
+  border-radius: 2rem;
 }
 
 .btn-sm, .btn-group-sm > .btn {
@@ -6565,12 +6565,12 @@ textarea.form-control-lg {
   font-size: 1.25rem;
 }
 .pagination-lg .page-item:first-child .page-link {
-  border-top-left-radius: 0.3rem;
-  border-bottom-left-radius: 0.3rem;
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
 }
 .pagination-lg .page-item:last-child .page-link {
-  border-top-right-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
 }
 
 .pagination-sm .page-link {
@@ -7238,7 +7238,7 @@ textarea.form-control-lg {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.3rem;
+  border-radius: 2rem;
   outline: 0;
 }
 
@@ -7265,8 +7265,8 @@ textarea.form-control-lg {
   justify-content: space-between;
   padding: 1rem 1rem;
   border-bottom: 1px solid #dee2e6;
-  border-top-left-radius: calc(0.3rem - 1px);
-  border-top-right-radius: calc(0.3rem - 1px);
+  border-top-left-radius: calc(2rem - 1px);
+  border-top-right-radius: calc(2rem - 1px);
 }
 .modal-header .btn-close {
   padding: 0.5rem 0.5rem;
@@ -7292,8 +7292,8 @@ textarea.form-control-lg {
   justify-content: flex-end;
   padding: 0.75rem;
   border-top: 1px solid #dee2e6;
-  border-bottom-right-radius: calc(0.3rem - 1px);
-  border-bottom-left-radius: calc(0.3rem - 1px);
+  border-bottom-right-radius: calc(2rem - 1px);
+  border-bottom-left-radius: calc(2rem - 1px);
 }
 .modal-footer > * {
   margin: 0.25rem;
@@ -7585,7 +7585,7 @@ textarea.form-control-lg {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.3rem;
+  border-radius: 2rem;
 }
 .popover .popover-arrow {
   position: absolute;
@@ -7677,8 +7677,8 @@ textarea.form-control-lg {
   font-size: 1rem;
   background-color: #f0f0f0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  border-top-left-radius: calc(0.3rem - 1px);
-  border-top-right-radius: calc(0.3rem - 1px);
+  border-top-left-radius: calc(2rem - 1px);
+  border-top-right-radius: calc(2rem - 1px);
 }
 .popover-header:empty {
   display: none;
@@ -9637,7 +9637,7 @@ textarea.form-control-lg {
 }
 
 .rounded-3 {
-  border-radius: 0.3rem !important;
+  border-radius: 2rem !important;
 }
 
 .rounded-circle {
@@ -12994,4 +12994,13 @@ textarea.form-control-lg {
   height: 70px;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.small-rounded-btn {
+  width: 50px;
+  height: 50px;
+  background: rgba(164, 164, 164, 0.259);
+  text-align: center;
+  line-height: 50px;
+  border-radius: 50%;
 }
