@@ -1,5 +1,8 @@
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Nunito");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+$font-family-sans-serif: "Poppins", sans-serif;
+$border-radius: 1rem;
 
 // Variables
 // @import 'variables';
@@ -12,3 +15,9 @@
 
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 @import "../../node_modules/sweetalert2/dist/sweetalert2.min.css";
+
+.item-small-photo {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}
