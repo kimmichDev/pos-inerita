@@ -1,12 +1,13 @@
 export default {
     state() {
         return {
-            voucher: [],
+            orders: [],
+            // id:1 item:{} quantity cost
         }
     },
     getters: {},
     mutations: {
-        addToVocher: (state, data) => state.voucher.push(data),
+        addToVocher: (state, data) => state.orders.unshift(data),
     },
     actions: {
         storeToVoucher: (context, data) => context.commit('addToVocher', data),

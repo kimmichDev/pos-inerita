@@ -3,9 +3,9 @@
         <div
             @click="$emit('categoryId', 'all')"
             :class="[
-                'mx-2 rounded-pill p-3',
+                'btn btn-light rounded-pill',
                 {
-                    'bg-primary': currentCategory == 'all',
+                    'bg-warning': currentCategory == 'all',
                     'text-white': currentCategory == 'all',
                 },
             ]"
@@ -18,9 +18,9 @@
             v-for="category in categories"
             :key="category.id"
             :class="[
-                'mx-2 rounded-pill p-3',
+                'btn btn-light rounded-pill',
                 {
-                    'bg-primary': currentCategory == category.id,
+                    'bg-warning': currentCategory == category.id,
                     'text-white': currentCategory == category.id,
                 },
             ]"

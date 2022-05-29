@@ -6,27 +6,40 @@
                 :categories="categories"
                 :currentCategory="currentCategory"
             ></PosNav>
-            <div class="row">
+            <div class="row gy-3">
                 <div class="col-12">
-                    <h5 v-if="filteredItems.length > 0">
+                    <h5
+                        v-if="filteredItems.length > 0"
+                        class="text-black-50 fw-bold"
+                    >
                         {{ currentCategoryName }}
                     </h5>
-                    <h3 v-else>No items available</h3>
+                    <h3 v-else class="text-black-50">No items available</h3>
                 </div>
-                <div
-                    class="col-4"
-                    v-for="item in filteredItems"
-                    :key="item.length"
-                >
+                <div class="col-4" v-for="item in filteredItems" :key="item.id">
                     <ItemCard :item="item" />
                 </div>
             </div>
         </div>
-        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-12">
+                        <Orders
+                            v-if="this.$store.state.Voucher.orders.length > 0"
+                        ></Orders>
+                        <div class="mt-3" v-else>
+                            <h5 class="mb-0 fw-bold">No Orders 👀</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import Orders from "./Orders";
 import ItemCard from "./ItemCard";
 import PosNav from "./PosNav";
 import PosLayout from "../../Layouts/PosLayout";
@@ -34,6 +47,7 @@ import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 export default {
     components: {
+        Orders,
         ItemCard,
         PosNav,
         PosLayout,
@@ -64,7 +78,6 @@ export default {
                 );
             }
         });
-
         return {
             changeCategory,
             filteredItems,

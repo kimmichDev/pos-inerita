@@ -1,7 +1,7 @@
 <template>
     <div class="card shadow">
         <div class="card-body">
-            <div class="row align-items-center">
+            <div class="row align-items-center mb-3">
                 <div class="col-5">
                     <div>
                         <img
@@ -14,7 +14,9 @@
                 </div>
                 <div class="col-7">
                     <div>
-                        <h5 class="fw-bold">{{ item.name }}</h5>
+                        <h5 class="fw-bold text-truncate text-nowrap">
+                            {{ item.name }}
+                        </h5>
                         <p class="fw-bold text-black-50">
                             {{ item.price }} MMK
                         </p>
@@ -22,32 +24,14 @@
                 </div>
             </div>
             <div class="row gy-3">
-                <div class="col-12">
-                    <div
-                        class="mt-3 d-flex justify-content-around align-items-center"
-                    >
-                        <div
-                            class="small-rounded-btn"
-                            style="cursor: pointer"
-                            @click="quantity > 1 ? quantity-- : ''"
-                        >
-                            <i class="bi bi-dash-lg"></i>
-                        </div>
-                        <div class="small-rounded-btn bg-primary">
-                            <span class="text-light"> {{ quantity }}</span>
-                        </div>
-                        <div
-                            class="small-rounded-btn"
-                            style="cursor: pointer"
-                            @click="quantity++"
-                        >
-                            <i class="bi bi-plus-lg"></i>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-12 d-flex justify-content-center">
-                    <button class="btn btn-primary w-75" @click="addToVoucher">
-                        Add to bill
+                    <button
+                        class="btn btn-warning text-light w-75"
+                        @click="addToVoucher"
+                        :disabled="isAlreadyAdded"
+                    >
+                        <span v-if="isAlreadyAdded">In the bill</span>
+                        <span v-else>Add</span>
                         <i class="bi bi-cart-plus-fill ms-2"></i>
                     </button>
                 </div>
@@ -59,21 +43,29 @@
 <script>
 import { ref } from "@vue/reactivity";
 import { useStore } from "vuex";
+import { computed } from "@vue/runtime-core";
 export default {
     props: ["item"],
     setup(props) {
         let quantity = ref(1);
         let store = useStore();
+
+        let isAlreadyAdded = computed(() => {
+            return store.state.Voucher.orders.some(
+                (o) => o.item.id == props.item.id
+            );
+        });
         let addToVoucher = () => {
             let orderedItem = {
-                id: Number(store.state.Voucher.voucher.length) + 1,
+                id: Number(store.state.Voucher.orders.length) + 1,
                 item: props.item,
                 quantity: quantity.value,
+                cost: Number(props.item.price),
             };
             store.dispatch("storeToVoucher", orderedItem);
-            console.log(store.state.Voucher);
+            console.log(isAlreadyAdded.value);
         };
-        return { quantity, addToVoucher };
+        return { quantity, addToVoucher, isAlreadyAdded };
     },
 };
 </script>

@@ -39,5 +39,5 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::resource("/item", ItemController::class);
 
-    Route::get("/pos", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::all()), "categories" => Category::all()]));
+    Route::get("/pos", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::latest('id')->get()), "categories" => Category::all()]));
 });
