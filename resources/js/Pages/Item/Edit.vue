@@ -134,7 +134,6 @@ export default {
             form.post(route("item.update", props.item.id), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    form.reset();
                     showToast("success", "Edited sucessfully");
                 },
             });

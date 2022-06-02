@@ -36,6 +36,7 @@
     "dependencies": {
         "bootstrap-icons": "^1.8.3",
         "sweetalert2": "^11.4.17",
+        "uniqid": "^5.4.0",
         "vuex": "^4.0.2"
     }
 }

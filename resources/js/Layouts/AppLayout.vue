@@ -7,7 +7,7 @@
         >
             <div class="container">
                 <!-- Logo -->
-                <Link class="navbar-brand me-4" :href="route('dashboard')">
+                <Link class="navbar-brand me-4" :href="route('pos')">
                     POS
                 </Link>
                 <button

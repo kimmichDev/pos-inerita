@@ -6,7 +6,7 @@
                 :categories="categories"
                 :currentCategory="currentCategory"
             ></PosNav>
-            <div class="row gy-3">
+            <div class="row g-3" style="max-height: 83vh; overflow-y: auto">
                 <div class="col-12">
                     <h5
                         v-if="filteredItems.length > 0"
@@ -25,11 +25,17 @@
             <div class="mt-3">
                 <div class="row">
                     <div class="col-12">
-                        <Orders
-                            v-if="this.$store.state.Voucher.orders.length > 0"
-                        ></Orders>
-                        <div class="mt-3" v-else>
-                            <h5 class="mb-0 fw-bold">No Orders 👀</h5>
+                        <div class="">
+                            <div class="card border-0 shadow">
+                                <div class="card-body">
+                                    <Orders v-if="whenToMountOrders"></Orders>
+                                    <div class="" v-else>
+                                        <h5 class="mb-0 fw-bold">
+                                            No Orders 👀
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,7 +50,9 @@ import ItemCard from "./ItemCard";
 import PosNav from "./PosNav";
 import PosLayout from "../../Layouts/PosLayout";
 import { ref } from "@vue/reactivity";
-import { computed } from "@vue/runtime-core";
+import { computed, onMounted, watch } from "@vue/runtime-core";
+import { paginator } from "../../Composables/paginate";
+import { useStore } from "vuex";
 export default {
     components: {
         Orders,
@@ -56,6 +64,14 @@ export default {
     props: ["items", "categories"],
     setup(props) {
         let currentCategory = ref("all");
+
+        let store = useStore();
+        let whenToMountOrders = computed(
+            () =>
+                store.state.Voucher.orders.length > 0 ||
+                localStorage.getItem("localOrders")
+        );
+
         let filteredItems = computed(() => {
             if (currentCategory.value == "all") {
                 return props.items;
@@ -65,6 +81,8 @@ export default {
                 );
             }
         });
+        let paginate = computed(() => paginator(filteredItems.value, 1, 6));
+        console.log(paginate.value);
         let changeCategory = (id) => {
             currentCategory.value = id;
         };
@@ -78,11 +96,23 @@ export default {
                 );
             }
         });
+
+        onMounted(() => {
+            if (JSON.parse(localStorage.getItem("localOrders"))) {
+                store.state.Voucher.orders = JSON.parse(
+                    localStorage.getItem("localOrders")
+                );
+            } else {
+                store.state.Voucher.orders = [];
+            }
+        });
+
         return {
             changeCategory,
             filteredItems,
             currentCategory,
             currentCategoryName,
+            whenToMountOrders,
         };
     },
 };

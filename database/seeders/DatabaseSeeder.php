@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Item;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,5 +30,7 @@ class DatabaseSeeder extends Seeder
                 "name" => $c,
             ]);
         }
+
+        Item::factory()->count(25)->create();
     }
 }

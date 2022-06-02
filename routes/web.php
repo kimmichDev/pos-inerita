@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Resources\ItemResource;
 use App\Models\Category;
 use App\Models\Item;
@@ -39,5 +40,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::resource("/item", ItemController::class);
 
-    Route::get("/pos", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::latest('id')->get()), "categories" => Category::all()]));
+    Route::get("/pos", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::latest('id')->get()), "categories" => Category::all()]))->name('pos');
+
+    Route::resource("/voucher", VoucherController::class);
 });

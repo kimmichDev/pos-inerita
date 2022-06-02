@@ -4,8 +4,10 @@
 $font-family-sans-serif: "Poppins", sans-serif;
 $border-radius: 1rem;
 $border-radius-lg: 2rem;
+$border-radius-sm: 1.5rem;
 $warning: #f07613;
 $danger: #ed5575;
+$success: #5fd068;
 // Variables
 // @import 'variables';
 
@@ -24,10 +26,40 @@ $danger: #ed5575;
     object-fit: cover;
 }
 .small-rounded-btn {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background: rgba(164, 164, 164, 0.259);
     text-align: center;
-    line-height: 50px;
+    line-height: 40px;
     border-radius: 50%;
+    cursor: pointer;
+}
+
+@keyframes jelly {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.jelly-ani {
+    animation: jelly 0.75s forwards;
+    opacity: 0.4;
+}
+
+.cur-pointer {
+    cursor: pointer;
+}
+
+.cur-pointer {
+    cursor: pointer;
+}
+
+.pointer-event-disable {
+    pointer-events: none;
 }

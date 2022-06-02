@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { computed } from "@vue/runtime-core";
+import { computed, watch } from "@vue/runtime-core";
 import { useStore } from "vuex";
 export default {
     setup() {
@@ -24,6 +24,7 @@ export default {
                 0
             );
         });
+        watch(total, () => store.dispatch("updateTotal", total.value));
         return { total };
     },
 };

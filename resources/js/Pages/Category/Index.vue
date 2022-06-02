@@ -5,10 +5,10 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
-                            <a :href="route('dashboard')">
+                            <Link :href="route('dashboard')">
                                 <i class="bi bi-house-fill"></i>
                                 Home
-                            </a>
+                            </Link>
                         </li>
                         <li class="breadcrumb-item active">
                             <i class="bi bi-list-ul"></i>

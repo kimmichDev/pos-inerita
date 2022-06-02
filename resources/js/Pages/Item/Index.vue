@@ -56,7 +56,8 @@
                                 Edit
                             </Link>
                             <button
-                                class="btn btn-danger"
+                                :disabled="isUploading"
+                                class="btn btn-danger text-light"
                                 @click="delConfirm(item.id)"
                             >
                                 <i class="bi bi-trash"></i>
@@ -84,18 +85,23 @@
 import { Inertia } from "@inertiajs/inertia";
 import { showConfirm } from "../../Composables/showConfirm";
 import { showToast } from "../../Composables/showToast";
+import { ref } from "@vue/reactivity";
 export default {
     props: ["items"],
     setup() {
+        let isUploading = ref(false);
         let delConfirm = (id) => {
             showConfirm(() => {
+                isUploading.value = true;
                 Inertia.delete(route("item.destroy", id), {
-                    onSuccess: () =>
-                        showToast("success", "Deleted successfully"),
+                    onSuccess: () => {
+                        isUploading.value = false;
+                        showToast("success", "Deleted successfully");
+                    },
                 });
             });
         };
-        return { delConfirm };
+        return { delConfirm, isUploading };
     },
 };
 </script>
