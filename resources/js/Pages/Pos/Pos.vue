@@ -61,7 +61,7 @@ export default {
         PosLayout,
     },
     layout: PosLayout,
-    props: ["items", "categories"],
+    props: ["items", "categories", "errors"],
     setup(props) {
         let currentCategory = ref("all");
 
@@ -81,8 +81,7 @@ export default {
                 );
             }
         });
-        let paginate = computed(() => paginator(filteredItems.value, 1, 6));
-        console.log(paginate.value);
+
         let changeCategory = (id) => {
             currentCategory.value = id;
         };

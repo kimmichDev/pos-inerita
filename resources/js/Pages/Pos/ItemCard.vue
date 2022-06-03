@@ -52,19 +52,23 @@ export default {
                 (o) => o.item.id == props.item.id
             );
         });
-        let addToVoucher = () => {
-            showConfirm(() => {
-                let orderedItem = {
-                    id: Number(store.state.Voucher.orders.length) + 1,
-                    item: props.item,
-                    quantity: quantity.value,
-                    cost: Number(props.item.price),
-                };
 
-                store.dispatch("storeToVoucher", orderedItem);
-                console.log(store.state.Voucher.orders);
-                console.log(isAlreadyAdded.value);
-            }, "Sure to add?");
+        let addToVoucher = () => {
+            let orders = computed({
+                get() {
+                    return store.state.Voucher.orders;
+                },
+            });
+            let orderedItem = {
+                id:
+                    orders.value.length > 0
+                        ? Number(orders.value[0].id) + 1
+                        : 1,
+                item: props.item,
+                quantity: 1,
+                cost: Number(props.item.price),
+            };
+            store.dispatch("storeToVoucher", orderedItem);
         };
         return { quantity, addToVoucher, isAlreadyAdded };
     },

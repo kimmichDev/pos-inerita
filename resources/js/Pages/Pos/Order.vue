@@ -101,10 +101,10 @@ export default {
                     JSON.stringify(orders.value)
                 );
             } else {
-                orders.value.splice(
-                    orders.value.indexOf(currentOrder.value),
-                    1
+                let fileredOrders = orders.value.filter(
+                    (o) => o.id != currentOrder.value.id
                 );
+                store.dispatch("updateOrders", fileredOrders);
                 localStorage.setItem(
                     "localOrders",
                     JSON.stringify(orders.value)

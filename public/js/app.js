@@ -25737,7 +25737,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ["user", "title"],
+  props: ["user", "title", "canRegister"],
   components: {
     Head: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.Head,
     JetApplicationLogo: _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -25768,6 +25768,9 @@ __webpack_require__.r(__webpack_exports__);
     path: function path() {
       return window.location.pathname;
     }
+  },
+  mounted: function mounted() {
+    console.log(this.$props.user);
   }
 });
 
@@ -26631,6 +26634,9 @@ __webpack_require__.r(__webpack_exports__);
             store.dispatch("updateVoucherNumber", uniqid__WEBPACK_IMPORTED_MODULE_1___default()("voucher-"));
             store.dispatch("updateCustomerName", "");
             (0,_Composables_showToast__WEBPACK_IMPORTED_MODULE_2__.showToast)("success", "Checkout successfully");
+          },
+          onError: function onError() {
+            return (0,_Composables_showToast__WEBPACK_IMPORTED_MODULE_2__.showToast)("error", "Error when checkout");
           }
         });
       }, "Sure to chekout?");
@@ -26675,17 +26681,18 @@ __webpack_require__.r(__webpack_exports__);
     });
 
     var addToVoucher = function addToVoucher() {
-      (0,_Composables_showConfirm__WEBPACK_IMPORTED_MODULE_0__.showConfirm)(function () {
-        var orderedItem = {
-          id: Number(store.state.Voucher.orders.length) + 1,
-          item: props.item,
-          quantity: quantity.value,
-          cost: Number(props.item.price)
-        };
-        store.dispatch("storeToVoucher", orderedItem);
-        console.log(store.state.Voucher.orders);
-        console.log(isAlreadyAdded.value);
-      }, "Sure to add?");
+      var orders = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_3__.computed)({
+        get: function get() {
+          return store.state.Voucher.orders;
+        }
+      });
+      var orderedItem = {
+        id: orders.value.length > 0 ? Number(orders.value[0].id) + 1 : 1,
+        item: props.item,
+        quantity: 1,
+        cost: Number(props.item.price)
+      };
+      store.dispatch("storeToVoucher", orderedItem);
     };
 
     return {
@@ -26739,7 +26746,10 @@ __webpack_require__.r(__webpack_exports__);
         currentOrder.value.cost = props.order.item.price * currentOrder.value.quantity;
         localStorage.setItem("localOrders", JSON.stringify(orders.value));
       } else {
-        orders.value.splice(orders.value.indexOf(currentOrder.value), 1);
+        var fileredOrders = orders.value.filter(function (o) {
+          return o.id != currentOrder.value.id;
+        });
+        store.dispatch("updateOrders", fileredOrders);
         localStorage.setItem("localOrders", JSON.stringify(orders.value));
         orders.value.length < 1 && localStorage.removeItem("localOrders");
       }
@@ -26769,8 +26779,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Checkout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Checkout */ "./resources/js/Pages/Pos/Checkout.vue");
 /* harmony import */ var _Total__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Total */ "./resources/js/Pages/Pos/Total.vue");
 /* harmony import */ var _Order__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Order */ "./resources/js/Pages/Pos/Order.vue");
-/* harmony import */ var _vue_runtime_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @vue/runtime-core */ "./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+/* harmony import */ var _vue_runtime_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @vue/runtime-core */ "./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+/* harmony import */ var _Composables_showConfirm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Composables/showConfirm */ "./resources/js/Composables/showConfirm.js");
+
 
 
 
@@ -26783,19 +26795,21 @@ __webpack_require__.r(__webpack_exports__);
     Order: _Order__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   setup: function setup() {
-    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_3__.useStore)();
-    var orderQuantity = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_4__.computed)(function () {
+    var store = (0,vuex__WEBPACK_IMPORTED_MODULE_4__.useStore)();
+    var orderQuantity = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_5__.computed)(function () {
       return store.state.Voucher.orders.reduce(function (ac, ob) {
         return ac + ob.quantity;
       }, 0);
     });
-    var orders = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_4__.computed)(function () {
+    var orders = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_5__.computed)(function () {
       return store.state.Voucher.orders;
     });
 
     var clearAll = function clearAll() {
-      store.state.Voucher.orders = [];
-      localStorage.removeItem("localOrders");
+      (0,_Composables_showConfirm__WEBPACK_IMPORTED_MODULE_3__.showConfirm)(function () {
+        store.state.Voucher.orders = [];
+        localStorage.removeItem("localOrders");
+      });
     };
 
     return {
@@ -26843,7 +26857,7 @@ __webpack_require__.r(__webpack_exports__);
     PosLayout: _Layouts_PosLayout__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   layout: _Layouts_PosLayout__WEBPACK_IMPORTED_MODULE_3__["default"],
-  props: ["items", "categories"],
+  props: ["items", "categories", "errors"],
   setup: function setup(props) {
     var currentCategory = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_5__.ref)("all");
     var store = (0,vuex__WEBPACK_IMPORTED_MODULE_6__.useStore)();
@@ -26859,10 +26873,6 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     });
-    var paginate = (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_7__.computed)(function () {
-      return (0,_Composables_paginate__WEBPACK_IMPORTED_MODULE_4__.paginator)(filteredItems.value, 1, 6);
-    });
-    console.log(paginate.value);
 
     var changeCategory = function changeCategory(id) {
       currentCategory.value = id;
@@ -27345,11 +27355,11 @@ __webpack_require__.r(__webpack_exports__);
     JetLabel: _Jetstream_Label_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
     JetSecondaryButton: _Jetstream_SecondaryButton_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
-  props: ['user'],
+  props: ["user"],
   data: function data() {
     return {
       form: this.$inertia.form({
-        _method: 'PUT',
+        _method: "PUT",
         name: this.user.name,
         email: this.user.email,
         photo: null
@@ -27365,8 +27375,8 @@ __webpack_require__.r(__webpack_exports__);
         this.form.photo = this.$refs.photo.files[0];
       }
 
-      this.form.post(route('user-profile-information.update'), {
-        errorBag: 'updateProfileInformation',
+      this.form.post(route("user-profile-information.update"), {
+        errorBag: "updateProfileInformation",
         preserveScroll: true,
         onSuccess: function onSuccess() {
           return _this.clearPhotoFileInput();
@@ -27392,7 +27402,7 @@ __webpack_require__.r(__webpack_exports__);
     deletePhoto: function deletePhoto() {
       var _this3 = this;
 
-      this.$inertia["delete"](route('current-user-photo.destroy'), {
+      this.$inertia["delete"](route("current-user-photo.destroy"), {
         preserveScroll: true,
         onSuccess: function onSuccess() {
           _this3.photoPreview = null;
@@ -28664,8 +28674,11 @@ var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNo
 var _hoisted_16 = {
   "class": "navbar-nav align-items-baseline"
 };
+var _hoisted_17 = {
+  key: 0
+};
 
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   "class": "ms-2",
   width: "18",
   xmlns: "http://www.w3.org/2000/svg",
@@ -28679,23 +28692,36 @@ var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", {
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", {
   "class": "dropdown-header small text-muted"
 }, " Manage Account ", -1
 /* HOISTED */
 );
 
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Profile ");
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Profile ");
 
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", {
+var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", {
   "class": "dropdown-divider"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log out ");
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log outs ");
 
-var _hoisted_22 = {
+var _hoisted_23 = {
+  key: 1,
+  "class": "collapse navbar-collapse",
+  id: "navbarSupportedContent"
+};
+var _hoisted_24 = {
+  "class": "navbar-nav align-items-baseline"
+};
+
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ");
+
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
+
+var _hoisted_27 = {
   "class": "container"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -28813,27 +28839,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Right Side Of Navbar "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Authentication Links "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_dropdown, {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Right Side Of Navbar "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Authentication Links "), $props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_dropdown, {
     id: "settingsDropdown"
   }, {
     trigger: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.name) + " ", 1
       /* TEXT */
-      ), _hoisted_17])];
+      ), _hoisted_18])];
     }),
     content: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Account Management "), _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_dropdown_link, {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Account Management "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_dropdown_link, {
         href: _ctx.route('profile.show')
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_19];
+          return [_hoisted_20];
         }),
         _: 1
         /* STABLE */
 
       }, 8
       /* PROPS */
-      , ["href"]), _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Authentication "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+      , ["href"]), _hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Authentication "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
         onSubmit: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
           return $options.logout && $options.logout.apply($options, arguments);
         }, ["prevent"]))
@@ -28841,19 +28867,44 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         as: "button"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_21];
+          return [_hoisted_22];
         }),
         _: 1
         /* STABLE */
 
       })], 32
       /* HYDRATE_EVENTS */
-      )];
+      )])];
     }),
     _: 1
     /* STABLE */
 
-  })])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Content "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")])]);
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: _ctx.route('login'),
+    "class": "text-muted"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_25];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["href"]), $props.canRegister ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    key: 0,
+    href: _ctx.route('register'),
+    "class": "ms-4 text-muted"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_26];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Content "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")])]);
 }
 
 /***/ }),
@@ -28894,22 +28945,26 @@ var _hoisted_6 = {
   "class": "me-2"
 };
 var _hoisted_7 = {
+  "class": "me-2"
+};
+var _hoisted_8 = ["value"];
+var _hoisted_9 = {
   "class": "card shadow"
 };
-var _hoisted_8 = {
+var _hoisted_10 = {
   "class": "card-body d-flex"
 };
-var _hoisted_9 = {
+var _hoisted_11 = {
   "class": "mb-0"
 };
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "small text-black-50"
 }, "Cashier ", -1
 /* HOISTED */
 );
 
-var _hoisted_11 = {
+var _hoisted_13 = {
   "class": "container"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -28930,7 +28985,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.errors.customerName), 3
   /* TEXT, CLASS */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $setup.voucherNumber = $event;
@@ -28946,9 +29001,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.errors.voucherNumber), 3
   /* TEXT, CLASS */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div>\n                    <div class=\"input-group\">\n                        <input type=\"text\" class=\"form-control\" />\n                        <span class=\"input-group-text\" id=\"basic-addon2\"\n                            ><i class=\"bi bi-search\"></i\n                        ></span>\n                    </div>\n                </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.name), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    disabled: "",
+    "class": "form-control",
+    value: this.$store.getters.getDate
+  }, null, 8
+  /* PROPS */
+  , _hoisted_8)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div>\n                    <div class=\"input-group\">\n                        <input type=\"text\" class=\"form-control\" />\n                        <span class=\"input-group-text\" id=\"basic-addon2\"\n                            ><i class=\"bi bi-search\"></i\n                        ></span>\n                    </div>\n                </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.name), 1
   /* TEXT */
-  )])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")])], 64
+  )])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")])], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -32644,7 +32706,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "for": "photo",
         value: "Photo"
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Current Profile Photo "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-        src: _ctx.user.profile_photo_url,
+        src: '/storage/' + _ctx.user.profile_photo_path,
+        style: {
+          "width": "30%",
+          "aspect-ratio": "1",
+          "object-fit": "cover"
+        },
         alt: "Current Profile Photo",
         "class": "rounded-circle"
       }, null, 8
@@ -32654,8 +32721,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !_ctx.photoPreview]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" New Profile Photo Preview "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
         src: _ctx.photoPreview,
         "class": "rounded-circle",
-        width: "80px",
-        height: "80px"
+        width: "80",
+        height: "80"
       }, null, 8
       /* PROPS */
       , _hoisted_8)], 512
@@ -32873,32 +32940,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "container-fluid fixed-top p-4"
-};
-var _hoisted_2 = {
-  "class": "col-12"
-};
-var _hoisted_3 = {
-  key: 0,
-  "class": "d-flex justify-content-end"
-};
-
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Dashboard ");
-
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ");
-
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
-
-var _hoisted_7 = {
   "class": "container-fluid my-5 pt-5 px-5"
 };
-var _hoisted_8 = {
+var _hoisted_2 = {
   "class": "row justify-content-center px-4"
 };
-var _hoisted_9 = {
+var _hoisted_3 = {
   "class": "col-md-12 col-lg-9"
 };
-var _hoisted_10 = {
+var _hoisted_4 = {
   viewBox: "0 0 651 192",
   fill: "none",
   xmlns: "http://www.w3.org/2000/svg",
@@ -32908,7 +32958,7 @@ var _hoisted_10 = {
   }
 };
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("g", {
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("g", {
   "clip-path": "url(#clip0)",
   fill: "#EF3B2D"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
@@ -32917,20 +32967,20 @@ var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_12 = [_hoisted_11];
+var _hoisted_6 = [_hoisted_5];
 
-var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"card shadow-sm\"><div class=\"row\"><div class=\"col-md-6 pe-0\"><div class=\"card-body border-right border-bottom p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253\"></path></svg></div><div class=\"ps-3\"><div class=\"mb-2\"><a href=\"https://laravel.com/docs\" class=\"h5 font-weight-bolder text-dark\">Documentation</a></div><p class=\"text-muted small\"> Laravel has wonderful, thorough documentation covering every aspect of the framework. Whether you are new to the framework or have previous experience with Laravel, we recommend reading all of the documentation from beginning to end. </p></div></div></div></div><div class=\"col-md-6 ps-0\"><div class=\"card-body border-bottom p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z\"></path><path d=\"M15 13a3 3 0 11-6 0 3 3 0 016 0z\"></path></svg></div><div class=\"ps-3\"><div class=\"mb-2\"><a href=\"https://laracasts.com\" class=\"h5 font-weight-bolder text-dark\">Laracasts</a></div><p class=\"text-muted small\"> Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process. </p></div></div></div></div><div class=\"col-md-6 pe-0\"><div class=\"card-body border-right p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z\"></path></svg></div><div class=\"ps-3 text-sm\"><div class=\"mb-2\"><a href=\"https://laravel-news.com/\" class=\"h5 font-weight-bolder text-dark\">Laravel News</a></div><p class=\"text-muted small\"> Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials. </p></div></div></div></div><div class=\"col-md-6 ps-0\"><div class=\"card-body p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path></svg></div><div class=\"ps-3\"><div class=\"mb-2\"><span class=\"h5 font-weight-bolder text-dark\">Vibrant Ecosystem</span></div><p class=\"text-muted small\"> Laravel&#39;s robust library of first-party tools and libraries, such as <a href=\"https://forge.laravel.com\" class=\"text-muted\">Forge</a>, <a href=\"https://vapor.laravel.com\" class=\"text-muted\">Vapor</a>, <a href=\"https://nova.laravel.com\" class=\"text-muted\">Nova</a>, and <a href=\"https://envoyer.io\" class=\"text-muted\">Envoyer</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href=\"https://laravel.com/docs/billing\" class=\"text-muted\">Cashier</a>, <a href=\"https://laravel.com/docs/dusk\" class=\"text-muted\">Dusk</a>, <a href=\"https://laravel.com/docs/broadcasting\" class=\"text-muted\">Echo</a>, <a href=\"https://laravel.com/docs/horizon\" class=\"text-muted\">Horizon</a>, <a href=\"https://laravel.com/docs/sanctum\" class=\"text-muted\">Sanctum</a>, <a href=\"https://laravel.com/docs/telescope\" class=\"text-muted\">Telescope</a>, and more. </p></div></div></div></div></div></div>", 1);
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"card shadow-sm\"><div class=\"row\"><div class=\"col-md-6 pe-0\"><div class=\"card-body border-right border-bottom p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253\"></path></svg></div><div class=\"ps-3\"><div class=\"mb-2\"><a href=\"https://laravel.com/docs\" class=\"h5 font-weight-bolder text-dark\">Documentation</a></div><p class=\"text-muted small\"> Laravel has wonderful, thorough documentation covering every aspect of the framework. Whether you are new to the framework or have previous experience with Laravel, we recommend reading all of the documentation from beginning to end. </p></div></div></div></div><div class=\"col-md-6 ps-0\"><div class=\"card-body border-bottom p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z\"></path><path d=\"M15 13a3 3 0 11-6 0 3 3 0 016 0z\"></path></svg></div><div class=\"ps-3\"><div class=\"mb-2\"><a href=\"https://laracasts.com\" class=\"h5 font-weight-bolder text-dark\">Laracasts</a></div><p class=\"text-muted small\"> Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process. </p></div></div></div></div><div class=\"col-md-6 pe-0\"><div class=\"card-body border-right p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z\"></path></svg></div><div class=\"ps-3 text-sm\"><div class=\"mb-2\"><a href=\"https://laravel-news.com/\" class=\"h5 font-weight-bolder text-dark\">Laravel News</a></div><p class=\"text-muted small\"> Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials. </p></div></div></div></div><div class=\"col-md-6 ps-0\"><div class=\"card-body p-3 h-100\"><div class=\"d-flex flex-row bd-highlight pt-2\"><div><svg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"text-muted\" width=\"32\"><path d=\"M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path></svg></div><div class=\"ps-3\"><div class=\"mb-2\"><span class=\"h5 font-weight-bolder text-dark\">Vibrant Ecosystem</span></div><p class=\"text-muted small\"> Laravel&#39;s robust library of first-party tools and libraries, such as <a href=\"https://forge.laravel.com\" class=\"text-muted\">Forge</a>, <a href=\"https://vapor.laravel.com\" class=\"text-muted\">Vapor</a>, <a href=\"https://nova.laravel.com\" class=\"text-muted\">Nova</a>, and <a href=\"https://envoyer.io\" class=\"text-muted\">Envoyer</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href=\"https://laravel.com/docs/billing\" class=\"text-muted\">Cashier</a>, <a href=\"https://laravel.com/docs/dusk\" class=\"text-muted\">Dusk</a>, <a href=\"https://laravel.com/docs/broadcasting\" class=\"text-muted\">Echo</a>, <a href=\"https://laravel.com/docs/horizon\" class=\"text-muted\">Horizon</a>, <a href=\"https://laravel.com/docs/sanctum\" class=\"text-muted\">Sanctum</a>, <a href=\"https://laravel.com/docs/telescope\" class=\"text-muted\">Telescope</a>, and more. </p></div></div></div></div></div></div>", 1);
 
-var _hoisted_14 = {
+var _hoisted_8 = {
   "class": "d-flex justify-content-between mt-3"
 };
-var _hoisted_15 = {
+var _hoisted_9 = {
   "class": "text-sm text-muted"
 };
-var _hoisted_16 = {
+var _hoisted_10 = {
   "class": "flex align-content-center"
 };
-var _hoisted_17 = {
+var _hoisted_11 = {
   fill: "none",
   "stroke-linecap": "round",
   "stroke-linejoin": "round",
@@ -32943,22 +32993,22 @@ var _hoisted_17 = {
   }
 };
 
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
   d: "M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_19 = [_hoisted_18];
+var _hoisted_13 = [_hoisted_12];
 
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   href: "https://laravel.bigcartel.com",
   "class": "text-muted"
 }, " Shop ", -1
 /* HOISTED */
 );
 
-var _hoisted_21 = {
+var _hoisted_15 = {
   fill: "none",
   stroke: "currentColor",
   "stroke-linecap": "round",
@@ -32971,74 +33021,30 @@ var _hoisted_21 = {
   }
 };
 
-var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
   d: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_23 = [_hoisted_22];
+var _hoisted_17 = [_hoisted_16];
 
-var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
   href: "https://github.com/sponsors/taylorotwell",
   "class": "text-muted"
 }, " Sponsor ", -1
 /* HOISTED */
 );
 
-var _hoisted_25 = {
+var _hoisted_19 = {
   "class": "text-sm text-muted"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
-  var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
-
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, {
     title: "Welcome"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_ctx.canLogin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
-    key: 0,
-    href: _ctx.route('dashboard'),
-    "class": "text-muted"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_4];
-    }),
-    _: 1
-    /* STABLE */
-
-  }, 8
-  /* PROPS */
-  , ["href"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    key: 1
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: _ctx.route('login'),
-    "class": "text-muted"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_5];
-    }),
-    _: 1
-    /* STABLE */
-
-  }, 8
-  /* PROPS */
-  , ["href"]), _ctx.canRegister ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
-    key: 0,
-    href: _ctx.route('register'),
-    "class": "ms-4 text-muted"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_6];
-    }),
-    _: 1
-    /* STABLE */
-
-  }, 8
-  /* PROPS */
-  , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
-  /* STABLE_FRAGMENT */
-  ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_10, _hoisted_12)), _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_17, _hoisted_19)), _hoisted_20, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_21, _hoisted_23)), _hoisted_24])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, " Laravel v" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.laravelVersion) + " (PHP v" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.phpVersion) + ") ", 1
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"container-fluid fixed-top p-4\">\n            <div class=\"col-12\">\n                <div v-if=\"canLogin\" class=\"d-flex justify-content-end\">\n                    <div>\n\n                        <template v-if=\"!$page.props.user\">\n                            <Link :href=\"route('login')\" class=\"text-muted\">\n                                Log in\n                            </Link>\n\n                            <Link\n                                v-if=\"canRegister\"\n                                :href=\"route('register')\"\n                                class=\"ms-4 text-muted\"\n                            >\n                                Register\n                            </Link>\n                        </template>\n                    </div>\n                </div>\n            </div>\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_4, _hoisted_6)), _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_11, _hoisted_13)), _hoisted_14, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_15, _hoisted_17)), _hoisted_18])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, " Laravel v" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.laravelVersion) + " (PHP v" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.phpVersion) + ") ", 1
   /* TEXT */
   )])])])])])], 64
   /* STABLE_FRAGMENT */
@@ -33283,7 +33289,8 @@ __webpack_require__.r(__webpack_exports__);
   getters: {
     getDate: function getDate() {
       var date = new Date();
-      return "".concat(date.getDay(), "-").concat(date.getMonth + 1, "-").concat(date.getFullYear);
+      var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      return "".concat(date.getDay(), "-").concat(monthNames[date.getMonth()], "-").concat(date.getFullYear());
     }
   },
   mutations: {
@@ -33299,6 +33306,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     editTotal: function editTotal(state, data) {
       return state.total = data;
+    },
+    editOrders: function editOrders(state, data) {
+      return state.orders = data;
     }
   },
   actions: {
@@ -33313,6 +33323,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateTotal: function updateTotal(context, data) {
       return context.commit('editTotal', data);
+    },
+    updateOrders: function updateOrders(context, data) {
+      return context.commit('editOrders', data);
     }
   }
 });

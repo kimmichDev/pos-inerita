@@ -13030,8 +13030,8 @@ textarea.form-control-lg {
   }
 }
 .jelly-ani {
-  -webkit-animation: jelly 0.75s forwards;
-          animation: jelly 0.75s forwards;
+  -webkit-animation: jelly 0.2s forwards;
+          animation: jelly 0.2s forwards;
   opacity: 0.4;
 }
 

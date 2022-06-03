@@ -53,6 +53,8 @@ export default {
                             store.dispatch("updateCustomerName", "");
                             showToast("success", "Checkout successfully");
                         },
+                        onError: () =>
+                            showToast("error", "Error when checkout"),
                     }),
                 "Sure to chekout?"
             );

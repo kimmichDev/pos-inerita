@@ -41,6 +41,7 @@ import Total from "./Total";
 import Order from "./Order";
 import { computed, onMounted } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import { showConfirm } from "../../Composables/showConfirm";
 export default {
     components: {
         Checkout,
@@ -55,8 +56,10 @@ export default {
         );
         let orders = computed(() => store.state.Voucher.orders);
         let clearAll = () => {
-            store.state.Voucher.orders = [];
-            localStorage.removeItem("localOrders");
+            showConfirm(() => {
+                store.state.Voucher.orders = [];
+                localStorage.removeItem("localOrders");
+            });
         };
         return { orders, orderQuantity, clearAll };
     },

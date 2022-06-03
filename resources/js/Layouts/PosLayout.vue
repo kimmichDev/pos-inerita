@@ -24,7 +24,7 @@
                             {{ errors.customerName }}
                         </small>
                     </div>
-                    <div>
+                    <div class="me-2">
                         <input
                             type="text"
                             v-model="voucherNumber"
@@ -40,6 +40,14 @@
                         >
                             {{ errors.voucherNumber }}
                         </small>
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            disabled
+                            class="form-control"
+                            :value="this.$store.getters.getDate"
+                        />
                     </div>
                 </div>
                 <!-- <div>

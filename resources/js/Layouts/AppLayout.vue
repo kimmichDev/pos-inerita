@@ -130,49 +130,75 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav align-items-baseline">
                         <!-- Authentication Links -->
-                        <jet-dropdown id="settingsDropdown">
-                            <template #trigger>
-                                <span>
-                                    {{ user.name }}
+                        <div v-if="user">
+                            <jet-dropdown id="settingsDropdown">
+                                <template #trigger>
+                                    <span>
+                                        {{ user.name }}
 
-                                    <svg
-                                        class="ms-2"
-                                        width="18"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                            clip-rule="evenodd"
-                                        />
-                                    </svg>
-                                </span>
-                            </template>
+                                        <svg
+                                            class="ms-2"
+                                            width="18"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                    </span>
+                                </template>
 
-                            <template #content>
-                                <!-- Account Management -->
-                                <h6 class="dropdown-header small text-muted">
-                                    Manage Account
-                                </h6>
+                                <template #content>
+                                    <!-- Account Management -->
+                                    <div>
+                                        <h6
+                                            class="dropdown-header small text-muted"
+                                        >
+                                            Manage Account
+                                        </h6>
 
-                                <jet-dropdown-link
-                                    :href="route('profile.show')"
-                                >
-                                    Profile
-                                </jet-dropdown-link>
+                                        <jet-dropdown-link
+                                            :href="route('profile.show')"
+                                        >
+                                            Profile
+                                        </jet-dropdown-link>
 
-                                <hr class="dropdown-divider" />
+                                        <hr class="dropdown-divider" />
 
-                                <!-- Authentication -->
-                                <form @submit.prevent="logout">
-                                    <jet-dropdown-link as="button">
-                                        Log out
-                                    </jet-dropdown-link>
-                                </form>
-                            </template>
-                        </jet-dropdown>
+                                        <!-- Authentication -->
+                                        <form @submit.prevent="logout">
+                                            <jet-dropdown-link as="button">
+                                                Log outs
+                                            </jet-dropdown-link>
+                                        </form>
+                                    </div>
+                                </template>
+                            </jet-dropdown>
+                        </div>
+                    </ul>
+                </div>
+
+                <div
+                    class="collapse navbar-collapse"
+                    id="navbarSupportedContent"
+                    v-else
+                >
+                    <ul class="navbar-nav align-items-baseline">
+                        <Link :href="route('login')" class="text-muted">
+                            Log in
+                        </Link>
+
+                        <Link
+                            v-if="canRegister"
+                            :href="route('register')"
+                            class="ms-4 text-muted"
+                        >
+                            Register
+                        </Link>
                     </ul>
                 </div>
             </div>
@@ -194,7 +220,7 @@ import JetNavLink from "@/Jetstream/NavLink.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 
 export default {
-    props: ["user", "title"],
+    props: ["user", "title", "canRegister"],
 
     components: {
         Head,
@@ -234,6 +260,9 @@ export default {
         path() {
             return window.location.pathname;
         },
+    },
+    mounted() {
+        console.log(this.$props.user);
     },
 };
 </script>
