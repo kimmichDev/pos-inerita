@@ -2,7 +2,7 @@
     <nav class="container-fluid">
         <div class="row">
             <div
-                class="bg-light shadow d-flex justify-content-between align-items-center p-2"
+                class="bg-light shadow d-flex justify-content-between align-items-center px-5 p-2"
             >
                 <div>
                     <h3 class="mb-0">POS</h3>
@@ -59,13 +59,61 @@
                     </div>
                 </div> -->
                 <div>
-                    <div class="card shadow">
-                        <div class="card-body d-flex">
-                            <p class="mb-0">
-                                <span class="small text-black-50">Cashier </span
-                                >{{ user.name }}
-                            </p>
-                        </div>
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-light border border-1 border-light p-1 px-3 shadow dropdown-toggle profile-btn"
+                            type="button"
+                            id="dropdownMenuButton2"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <div
+                                class="d-flex align-items-center justify-content-between"
+                            >
+                                <div class="me-3">
+                                    <img
+                                        class="layout-profile rounded"
+                                        :src="
+                                            '/storage/' +
+                                            user.profile_photo_path
+                                        "
+                                        alt=""
+                                    />
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-left small text-black-50 mb-0"
+                                    >
+                                        Cashier
+                                    </p>
+                                    <p class="text-left mb-0 fw-bold">
+                                        {{ user.name }}
+                                    </p>
+                                </div>
+                            </div>
+                        </button>
+                        <ul
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton2"
+                        >
+                            <li class="px-2">
+                                <Link
+                                    class="dropdown-item rounded"
+                                    :href="route('dashboard')"
+                                >
+                                    Dashboard
+                                </Link>
+                            </li>
+                            <li class="px-2">
+                                <Link
+                                    class="dropdown-item rounded"
+                                    :href="route('logout')"
+                                    method="post"
+                                >
+                                    Logout
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -106,4 +154,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.profile-btn {
+    transition: transform 0.5s;
+}
+.profile-btn:hover {
+    transform: scale(0.95);
+}
+.dropdown-toggle::after {
+    display: none !important;
+}
+</style>

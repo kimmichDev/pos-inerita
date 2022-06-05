@@ -3,7 +3,7 @@
         <jet-banner />
 
         <nav
-            class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top"
+            class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top mb-3"
         >
             <div class="container">
                 <!-- Logo -->
@@ -122,6 +122,55 @@
 
                                 <jet-dropdown-link :href="route('item.index')">
                                     Item List
+                                </jet-dropdown-link>
+                            </template>
+                        </jet-dropdown>
+
+                        <!-- sales report -->
+                        <jet-dropdown id="settingsDropdown">
+                            <template #trigger>
+                                <span>
+                                    <span
+                                        :class="{
+                                            'text-black':
+                                                $page.url.startsWith(
+                                                    '/daily'
+                                                ) ||
+                                                $page.url.startsWith(
+                                                    '/monthly'
+                                                ),
+                                        }"
+                                        >Reports</span
+                                    >
+                                    <svg
+                                        class="ms-2"
+                                        width="18"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </span>
+                            </template>
+
+                            <template #content>
+                                <h6 class="dropdown-header small text-muted">
+                                    Sale Reports
+                                </h6>
+
+                                <jet-dropdown-link
+                                    :href="route('dailySaleReport')"
+                                >
+                                    Daily Sale Reports
+                                </jet-dropdown-link>
+
+                                <jet-dropdown-link :href="route('item.index')">
+                                    Monthly Sale Reports
                                 </jet-dropdown-link>
                             </template>
                         </jet-dropdown>

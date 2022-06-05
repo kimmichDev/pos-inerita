@@ -12,10 +12,10 @@
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-12">
-                    <div class="mb-3">
+                    <div class="mb-3 overflow-hidden rounded">
                         <img
                             :src="item.photo"
-                            class="w-100 h-100 rounded"
+                            class="w-100 h-100 pos-item-photo"
                             style="object-fit: cover; aspect-ratio: 4/3"
                             alt=""
                         />

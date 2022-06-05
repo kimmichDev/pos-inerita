@@ -10,10 +10,12 @@
 <script>
 import { useForm } from "@inertiajs/inertia-vue3";
 import { useStore } from "vuex";
-import { computed } from "@vue/runtime-core";
 import uniqid from "uniqid";
+import { computed } from "@vue/runtime-core";
 import { showToast } from "../../Composables/showToast";
 import { showConfirm } from "../../Composables/showConfirm";
+import { showAlert } from "../../Composables/showAlert";
+
 export default {
     setup() {
         let store = useStore();
@@ -39,25 +41,30 @@ export default {
             }),
         });
 
-        let storeVouchers = () =>
-            showConfirm(
-                () =>
-                    form.post(route("voucher.store"), {
-                        onSuccess: () => {
-                            store.state.Voucher.orders = [];
-                            localStorage.removeItem("localOrders");
-                            store.dispatch(
-                                "updateVoucherNumber",
-                                uniqid("voucher-")
-                            );
-                            store.dispatch("updateCustomerName", "");
-                            showToast("success", "Checkout successfully");
-                        },
-                        onError: () =>
-                            showToast("error", "Error when checkout"),
-                    }),
-                "Sure to chekout?"
-            );
+        let storeVouchers = () => {
+            if (!store.state.Voucher.customerName) {
+                showAlert("error", "Enter customer name", "");
+            } else {
+                showConfirm(
+                    () =>
+                        form.post(route("voucher.store"), {
+                            onSuccess: () => {
+                                store.state.Voucher.orders = [];
+                                localStorage.removeItem("localOrders");
+                                store.dispatch(
+                                    "updateVoucherNumber",
+                                    uniqid("voucher-")
+                                );
+                                store.dispatch("updateCustomerName", "");
+                                showToast("success", "Checkout successfully");
+                            },
+                            onError: () =>
+                                showToast("error", "Error when checkout"),
+                        }),
+                    "Sure to chekout?"
+                );
+            }
+        };
 
         return { storeVouchers };
     },

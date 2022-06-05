@@ -20,11 +20,29 @@ $success: #5fd068;
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 @import "../../node_modules/sweetalert2/dist/sweetalert2.min.css";
 
-.item-small-photo {
-    width: 70px;
-    height: 70px;
+.object-fit {
     object-fit: cover;
 }
+.item-small-photo {
+    @extend .object-fit;
+    width: 70px;
+    height: 70px;
+}
+
+.layout-profile {
+    @extend .object-fit;
+    width: 50px;
+    height: 50px;
+}
+
+.pos-item-photo {
+    transition: transform 0.5s;
+}
+
+.pos-item-photo:hover {
+    transform: scale(1.15);
+}
+
 .small-rounded-btn {
     width: 40px;
     height: 40px;
