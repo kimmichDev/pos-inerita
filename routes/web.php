@@ -45,5 +45,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::resource("/voucher", VoucherController::class);
 
-    Route::get("/daily-sale-report", [SaleController::class, 'showDailySaleReport'])->name("dailySaleReport");
+    Route::get("/daily-sale-report", [SaleController::class, 'showDailySaleReport'])->name("dailySaleReport")->middleware('dailySaleReport');
+    Route::post("/daily-sale-report", [SaleController::class, 'storeDailySaleReport'])->name("dailySaleReport.store")->middleware('dailySaleReport');
 });

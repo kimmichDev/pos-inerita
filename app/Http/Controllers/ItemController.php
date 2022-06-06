@@ -20,7 +20,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Item/Index", ["items" => ItemResource::collection(Item::all())]);
+        return Inertia::render("Item/Index", ["items" => ItemResource::collection(Item::with('category')->get())]);
     }
 
     /**

@@ -37,6 +37,10 @@ export default {
                     data: props.data,
                     borderColor: "#0d6efdad",
                     tension: 0.4,
+                    backgroundColor: "#0d6efdad",
+                    pointStyle: "circle",
+                    pointRadius: 5,
+                    pointHoverRadius: 10,
                 },
             ],
         };

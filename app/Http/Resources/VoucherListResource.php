@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\VoucherList;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VoucherResource extends JsonResource
+class VoucherListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +18,9 @@ class VoucherResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "customer_name" => $this->customer_name,
-            "voucher_number" => $this->voucher_number,
-            "total" => $this->total,
-            "created_at_time" => $this->created_at->format("h:i a"),
-            "created_at_date" => $this->created_at->format("d-M")
+            "item" => $this->item,
+            "quantity" => $this->quantity,
+            "cost" => $this->cost,
         ];
     }
 }

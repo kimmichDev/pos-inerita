@@ -13022,6 +13022,20 @@ textarea.form-control-lg {
   cursor: pointer;
 }
 
+.gradient-1 {
+  background: linear-gradient(135deg, #17ead9 0%, #6078ea 100%);
+}
+
+.gradient-2 {
+  background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%);
+}
+
+.aspect-16-9 {
+  aspect-ratio: 16/9;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 @-webkit-keyframes jelly {
   0% {
     transform: scale(1);
