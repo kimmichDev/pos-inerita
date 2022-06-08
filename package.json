@@ -38,7 +38,6 @@
         "chart.js": "^3.8.0",
         "sweetalert2": "^11.4.17",
         "uniqid": "^5.4.0",
-        "vue-chartjs": "^4.1.1",
         "vuex": "^4.0.2"
     }
 }

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('daily_sale_reports', function (Blueprint $table) {
             $table->id();
-            $table->string("daily_sale_report_date");
-            $table->string("daily_sale_report_total");
+            $table->string("date");
+            $table->string("total");
             $table->timestamps();
         });
     }

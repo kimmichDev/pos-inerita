@@ -43,14 +43,18 @@ class VoucherController extends Controller
             $voucher->customer_name = $request->customerName;
             $voucher->voucher_number = $request->voucherNumber;
             $voucher->total = $request->total;
+            $voucher->date = now()->format("Y-m-d");
             $voucher->save();
 
             foreach ($request->vouchers as $v) {
                 $voucherList = new VoucherList();
                 $voucherList->voucher_id = $voucher->id;
                 $voucherList->item_id = $v["item"]["id"];
+                $voucherList->item_name = $v["item"]["name"];
+                $voucherList->unit_price = $v["item"]["price"];
                 $voucherList->quantity = $v["quantity"];
                 $voucherList->cost = $v["cost"];
+                $voucherList->date = now()->format("Y-m-d");
                 $voucherList->save();
             }
         });

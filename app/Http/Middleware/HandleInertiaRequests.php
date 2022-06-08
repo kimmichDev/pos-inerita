@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\DailySaleReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -38,7 +39,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            "user" => Auth::user()
+            "user" => Auth::user(),
         ]);
     }
 }

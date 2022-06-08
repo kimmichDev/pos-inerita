@@ -18,11 +18,9 @@ import { useStore } from "vuex";
 export default {
     setup() {
         let store = useStore();
-        let total = computed(() => {
-            return store.state.Voucher.orders.reduce(
-                (ac, ob) => ac + ob.cost,
-                0
-            );
+        let total = computed({
+            get: () =>
+                store.state.Voucher.orders.reduce((ac, ob) => ac + ob.cost, 0),
         });
         watch(total, () => store.dispatch("updateTotal", total.value));
         return { total };

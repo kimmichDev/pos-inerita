@@ -17,8 +17,11 @@ return new class extends Migration
             $table->id();
             $table->bigInteger("voucher_id");
             $table->bigInteger("item_id");
+            $table->string("item_name");
+            $table->double("unit_price");
             $table->string("quantity");
             $table->string("cost");
+            $table->date("date");
             $table->timestamps();
         });
     }

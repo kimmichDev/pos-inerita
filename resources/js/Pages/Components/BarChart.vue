@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas id="lineChart"></canvas>
+        <canvas id="barChart"></canvas>
     </div>
 </template>
 
@@ -8,30 +8,30 @@
 import Chart from "chart.js/auto";
 import { onMounted } from "@vue/runtime-core";
 export default {
-    props: ["labels", "label", "data"],
+    props: ["labels", "label", "data", "bgColor"],
     setup(props) {
         onMounted(() => {
-            const ctx = document.getElementById("lineChart");
+            const ctx = document.getElementById("barChart");
             new Chart(ctx, {
-                type: "line",
+                type: "bar",
                 data: {
                     labels: props.labels,
                     datasets: [
                         {
                             label: props.label,
                             data: props.data,
-                            backgroundColor: "#0d6efd",
-                            borderColor: "#0d6efd8f",
-                            borderWidth: 3,
+                            backgroundColor: props.bgColor,
                         },
                     ],
                 },
                 options: {
-                    lineTension: 0.4,
                     scales: {
+                        x: {
+                            display: false,
+                        },
                         y: {
                             ticks: {
-                                stepSize: 2000,
+                                stepSize: 1,
                             },
                         },
                     },

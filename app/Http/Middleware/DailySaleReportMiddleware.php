@@ -19,8 +19,8 @@ class DailySaleReportMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (DailySaleReport::whereDate("daily_sale_report_date", Carbon::today())->exists()) {
-            return Inertia::render("Dashboard", ["error_page" => "Daily sale is closed and come back tomorrow"]);
+        if (DailySaleReport::where("date", now()->format("Y-m-d"))->exists()) {
+            return Inertia::render("Welcome", ["error_page" => "Daily sale is closed and come back tomorrow"]);
         }
         return $next($request);
     }

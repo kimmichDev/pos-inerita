@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("customer_name");
             $table->string("voucher_number");
+            $table->date("date");
             $table->string("total");
             $table->timestamps();
         });

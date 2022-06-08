@@ -15,20 +15,33 @@ class SaleController extends Controller
 {
     public function showDailySaleReport()
     {
-        $items = VoucherListResource::collection(VoucherList::whereDate("created_at", Carbon::today())->latest("id")->get());
-        $totalItemQuantity = $items->groupBy("item_id")->map(function ($row) {
-            return $row->sum("quantity");
-        });
-        $vouchers = VoucherResource::collection(Voucher::whereDate("created_at", Carbon::today())->latest()->get());
+        $items = VoucherListResource::collection(VoucherList::where("date", Carbon::today()->format("Y-m-d"))->latest("id")->get());
+        $totalItem = $items->groupBy("item_id");
+        $totalItemName = [];
+        foreach ($totalItem as $key => $value) {
+            array_push($totalItemName, $value[0]->item_name);
+        }
+
+        $totalItemQuantity = [];
+        $totalItemCount = $items->groupBy("item_id")->map(fn ($row) => $row->sum("quantity"));
+        foreach ($totalItemCount as $key => $value) {
+            array_push($totalItemQuantity, $value);
+        }
+
+        $vouchers = VoucherResource::collection(Voucher::where("date", Carbon::today()->format('Y-m-d'))->latest()->get());
+
+        $vl = VoucherList::where("date", Carbon::today()->format("Y-m-d"))->latest("id")->get()->groupBy("item_name")->map(fn ($row) => $row->sum("quantity"))->toArray();
+        $topSeller = array_keys($vl, max($vl));
 
         return Inertia::render(
             "Sale/DailySaleReport",
             [
-                "todaySales" => VoucherResource::collection(Voucher::whereDate("created_at", Carbon::today())->get()),
-                "saleItems" => $items,
-                "totalItemQuantity" => $totalItemQuantity,
-                "itemNames" => Item::all(["id", "name"]),
+                "todaySales" => VoucherResource::collection(Voucher::where("date", Carbon::today()->format('Y-m-d'))->get()),
                 "vouchers" => $vouchers,
+                "totalItemQuantity" => $totalItemQuantity,
+                "totalItemName" => $totalItemName,
+                "topSeller" => $topSeller,
+                "isClosed" => DailySaleReport::where("date", now()->format("Y-m-d"))->exists()
             ]
         );
     }
@@ -36,9 +49,9 @@ class SaleController extends Controller
     public function storeDailySaleReport()
     {
         DailySaleReport::create([
-            "daily_sale_report_date" => Carbon::now()->toDateTimeString(),
-            "daily_sale_report_total" => Voucher::whereDate("created_at", Carbon::today())->get()->sum("total")
+            "date" => Carbon::now()->toDateString(),
+            "total" => Voucher::whereDate("created_at", Carbon::today())->get()->sum("total")
         ]);
-        return Inertia::render("Dashboard");
+        return redirect()->back();
     }
 }

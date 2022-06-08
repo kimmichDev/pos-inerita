@@ -20,7 +20,7 @@ class ItemResource extends JsonResource
             "price" => $this->price,
             "category_id" => $this->category_id,
             "category" => $this->category,
-            "photo" => asset("storage/item-photo/" . $this->photo),
+            "photo" => is_null($this->photo) ? asset("storage/item-photo/default-item.png") : asset("storage/item-photo/" . $this->photo),
             "created_at_date" => $this->created_at->format('d-M-Y'),
             "created_at_time" => $this->created_at->format('h:m:i a')
         ];

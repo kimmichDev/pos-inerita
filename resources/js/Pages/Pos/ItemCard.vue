@@ -69,6 +69,7 @@ export default {
                 cost: Number(props.item.price),
             };
             store.dispatch("storeToVoucher", orderedItem);
+            store.dispatch("updateTotal", props.item.price);
         };
         return { quantity, addToVoucher, isAlreadyAdded };
     },

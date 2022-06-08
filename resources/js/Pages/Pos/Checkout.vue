@@ -56,6 +56,7 @@ export default {
                                     uniqid("voucher-")
                                 );
                                 store.dispatch("updateCustomerName", "");
+                                store.state.Voucher.total = "";
                                 showToast("success", "Checkout successfully");
                             },
                             onError: () =>

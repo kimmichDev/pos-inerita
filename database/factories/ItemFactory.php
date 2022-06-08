@@ -16,11 +16,11 @@ class ItemFactory extends Factory
      */
     public function definition()
     {
-        return [
-            "name" => $this->faker->sentence(2),
-            "price" => $this->faker->numberBetween(500, 3000),
-            "category_id" => rand(1, 3),
-            "photo" => "photo"
-        ];
+        // return [
+        //     "name" => $this->faker->sentence(2),
+        //     "price" => $this->faker->numberBetween(500, 3000),
+        //     "category_id" => rand(1, 3),
+        //     "photo" => "photo"
+        // ];
     }
 }

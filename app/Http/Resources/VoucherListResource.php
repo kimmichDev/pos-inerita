@@ -18,7 +18,9 @@ class VoucherListResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "item" => $this->item,
+            "item_name" => $this->item_name,
+            "unit_price" => $this->price,
+            "voucher_id" => $this->voucher_id,
             "quantity" => $this->quantity,
             "cost" => $this->cost,
         ];

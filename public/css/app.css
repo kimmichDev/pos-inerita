@@ -13030,6 +13030,10 @@ textarea.form-control-lg {
   background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%);
 }
 
+.gradient-3 {
+  background: linear-gradient(135deg, #0ff0b3 0%, #036ed9 100%);
+}
+
 .aspect-16-9 {
   aspect-ratio: 16/9;
   -o-object-fit: cover;
