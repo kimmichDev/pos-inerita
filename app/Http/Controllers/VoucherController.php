@@ -15,6 +15,12 @@ class VoucherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        return $this->middleware("dailySaleReport");
+    }
+
     public function index()
     {
         //
@@ -38,6 +44,7 @@ class VoucherController extends Controller
      */
     public function store(StoreVoucherRequest $request)
     {
+
         DB::transaction(function () use ($request) {
             $voucher = new Voucher();
             $voucher->customer_name = $request->customerName;

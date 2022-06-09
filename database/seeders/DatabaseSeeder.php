@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
                 // voucherlist
                 for ($vl = 1; $vl < rand(3, 5); $vl++) {
                     $item = Item::find(rand(1, 10));
-                    $quantity = rand(5, 10);
+                    $quantity = rand(1, 5);
                     $cost = $item->price * $quantity;
                     $voucher_total += $cost;
                     VoucherList::create([

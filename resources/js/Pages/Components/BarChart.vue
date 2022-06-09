@@ -20,7 +20,7 @@ export default {
                         {
                             label: props.label,
                             data: props.data,
-                            backgroundColor: props.bgColor,
+                            backgroundColor: "#5686E7",
                         },
                     ],
                 },

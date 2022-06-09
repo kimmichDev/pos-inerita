@@ -23,6 +23,8 @@ export default {
                             backgroundColor: "#0d6efd",
                             borderColor: "#0d6efd8f",
                             borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
                         },
                     ],
                 },

@@ -28,6 +28,7 @@
                         <input
                             type="text"
                             v-model="voucherNumber"
+                            disabled
                             :class="[
                                 'form-control',
                                 { 'is-invalid': errors.voucherNumber },
@@ -50,14 +51,6 @@
                         />
                     </div>
                 </div>
-                <!-- <div>
-                    <div class="input-group">
-                        <input type="text" class="form-control" />
-                        <span class="input-group-text" id="basic-addon2"
-                            ><i class="bi bi-search"></i
-                        ></span>
-                    </div>
-                </div> -->
                 <div>
                     <div class="dropdown">
                         <button

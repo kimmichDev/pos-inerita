@@ -6,11 +6,14 @@
 </template>
 
 <script>
+import { onMounted } from "@vue/runtime-core";
 import { showAlert } from "../Composables/showAlert";
 export default {
     props: ["error_page"],
     setup(props) {
-        props.error_page && showAlert("error", props.error_page, "");
+        onMounted(
+            () => props.error_page && showAlert("error", props.error_page, "")
+        );
         return {};
     },
 };
