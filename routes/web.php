@@ -51,11 +51,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::get("/daily-sale-report", [SaleController::class, 'showDailySaleReport'])->name("dailySaleReport");
     Route::post("/daily-sale-report", [SaleController::class, 'storeDailySaleReport'])->name("dailySaleReport.store");
+
+    Route::get("/daily-voucher-pdf", [SaleController::class, 'dailyVoucherPdf'])->name("dailyVoucher.pdf");
 });
 
 
 Route::get("/test", function () {
-    $vl = VoucherList::where("date", Carbon::today()->format("Y-m-d"))->latest("id")->get()->groupBy("item_name")->map(fn ($row) => $row->sum("quantity"))->toArray();
-    return array_keys($vl, max($vl));
+    // $vl = VoucherList::where("date", Carbon::today()->format("Y-m-d"))->latest("id")->get()->groupBy("item_name")->map(fn ($row) => $row->sum("quantity"))->toArray();
+    // return array_keys($vl, max($vl));
     // dd($vl);
+    return Carbon::parse()->format("Y-m-d");
 });

@@ -40,8 +40,8 @@
                             class="btn btn-sm btn-primary"
                             @click="dateHandler"
                         >
-                            <span class="me-3">Reload Data</span>
-                            <i class="bi bi-arrow-clockwise"></i>
+                            <span class="me-2">Reload Data</span>
+                            <i class="bi bi-arrow-repeat"></i>
                         </button>
                     </ol>
                 </nav>
@@ -52,7 +52,12 @@
         v-if="todaySales.length == 0"
         class="row justify-content-center align-items-start mb-3"
     >
-        <h5>No records found</h5>
+        <div class="mt-3">
+            <h5 class="mb-0 text-center text-black-50 fw-bold">
+                No records found
+            </h5>
+            <NoDataFound class="w-50 m-auto"></NoDataFound>
+        </div>
     </div>
     <div v-else>
         <div class="row justify-content-center">
@@ -128,28 +133,64 @@
 
         <div class="row justify-content-center align-items-center mb-3">
             <div class="card shadow">
-                <div class="card-header">Today Customers</div>
-                <div class="card-body">
+                <div
+                    class="card-header d-flex justify-content-between align-items-center"
+                >
+                    <span> Today Customers </span>
+                    <Link
+                        :href="
+                            route('dailyVoucher.pdf', { date: selectedDate })
+                        "
+                        class="btn btn-outline-primary"
+                    >
+                        Export to pdf
+                        <i class="bi bi-filetype-pdf ms-2"></i>
+                    </Link>
+                </div>
+                <div class="card-body pb-0">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Voucher Number</th>
-                                <th>Total</th>
-                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Item Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Cost</th>
                                 <th>Purchase Time</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="voucher in vouchers" :key="voucher.id">
-                                <td>{{ voucher.customer_name }}</td>
-                                <td>{{ voucher.voucher_number }}</td>
-                                <td>{{ voucher.total }} MMK</td>
-                                <td>{{ voucher.date }}</td>
-                                <td>{{ voucher.created_at_time }}</td>
+                            <tr v-for="vl in voucherLists.data" :key="vl.id">
+                                <td>{{ vl.voucherResource.customer_name }}</td>
+                                <td class="text-truncate text-nowrap">
+                                    {{ vl.item_name }}
+                                </td>
+                                <td>{{ vl.unit_price }}</td>
+                                <td>{{ vl.quantity }}</td>
+                                <td>{{ vl.cost }} MMK</td>
+                                <td>
+                                    {{ vl.voucherResource.created_at_time }}
+                                </td>
+                                <td>{{ vl.voucherResource.date }}</td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5" class="text-center fw-bold h5">
+                                    Total
+                                </td>
+                                <td>
+                                    <span class="text-primary fw-bold">
+                                        {{ total }} MMK
+                                    </span>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
+                    <div class="d-flex justify-content-center">
+                        <Paginator :links="voucherLists.meta.links"></Paginator>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
@@ -170,6 +211,8 @@
 </template>
 
 <script>
+import NoDataFound from "../Components/NoDataFound";
+import Paginator from "../Components/Paginator";
 import BarChart from "../Components/BarChart";
 import LineChart from "../Components/LineChart.vue";
 import { Head, useForm } from "@inertiajs/inertia-vue3";
@@ -181,13 +224,15 @@ import { showAlert } from "../../Composables/showAlert";
 import { showToast } from "../../Composables/showToast";
 export default {
     components: {
+        NoDataFound,
+        Paginator,
         BarChart,
         Head,
         LineChart,
     },
     props: [
         "todaySales",
-        "vouchers",
+        "voucherLists",
         "totalItemQuantity",
         "totalItemName",
         "topSeller",

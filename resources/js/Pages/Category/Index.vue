@@ -46,13 +46,13 @@
                                 <i class="bi bi-pen"></i>
                                 Edit
                             </Link>
-                            <button
+                            <!-- <button
                                 @click="destroy(category.id)"
                                 class="btn btn-danger"
                             >
                                 <i class="bi bi-trash"></i>
                                 Delete
-                            </button>
+                            </button> -->
                         </td>
                         <td>
                             <div>
