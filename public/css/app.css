@@ -13040,6 +13040,10 @@ textarea.form-control-lg {
      object-fit: cover;
 }
 
+.mx-input {
+  border-radius: 1rem 0 0 1rem !important;
+}
+
 @-webkit-keyframes jelly {
   0% {
     transform: scale(1);

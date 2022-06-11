@@ -34,6 +34,7 @@ class SaleController extends Controller
         }
 
         $voucherLists = VoucherListResource::collection(VoucherList::where("date", $date)->paginate()->withQueryString());
+        // $dsr = DailySaleReport::whereMonth("date",Carbon::parse(request('month'))->format('Y-m-d');)
 
         $vl = VoucherList::where("date", $date)->latest("id")->get()->groupBy("item_name")->map(fn ($row) => $row->sum("quantity"))->toArray();
         count($vl) > 0 ? $topSeller = array_keys($vl, max($vl)) : $topSeller = ["no item"];
@@ -48,7 +49,7 @@ class SaleController extends Controller
                 "totalItemName" => $totalItemName,
                 "topSeller" => $topSeller,
                 "isClosed" => DailySaleReport::where("date", $date)->exists(),
-                "selectedDate" => $date
+                "selectedDate" => Carbon::parse(request('date'))->format('d-M-Y')
             ]
         );
     }

@@ -1,7 +1,7 @@
 <template>
     <Head title="Daily Sale Report"></Head>
     <div class="row justify-content-center mb-3">
-        <div class="col-12">
+        <div class="col-12 mb-3">
             <div class="border p-3 shadow rounded">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 d-flex justify-content-between">
@@ -17,8 +17,17 @@
                                 Daily Sale Report
                             </li>
                         </div>
-                        <div class="input-group w-auto">
-                            <input
+                        <div class="input-group align-items-stretch w-auto">
+                            <date-picker
+                                v-model:value="form.date"
+                                value-type="format"
+                                format="DD-MMM-YYYY"
+                                :clearable="false"
+                                :default-value="form.date"
+                                :disabled-date="disabledDates"
+                                @change="dateHandler"
+                            ></date-picker>
+                            <!-- <input
                                 type="date"
                                 v-model="form.date"
                                 class="form-control w-auto"
@@ -27,9 +36,9 @@
                                 placeholder="dd-mm-yyyy"
                                 :max="today"
                                 @change="dateHandler"
-                            />
+                            /> -->
                             <button
-                                class="btn btn-primary"
+                                class="btn btn-primary btn-sm"
                                 @click="dateInputHandler"
                             >
                                 Select date
@@ -46,6 +55,11 @@
                     </ol>
                 </nav>
             </div>
+        </div>
+        <div class="col-12">
+            <h3 class="fw-bold text-black-50">
+                Daily report for {{ selectedDate }}
+            </h3>
         </div>
     </div>
     <div
@@ -147,12 +161,13 @@
                         <i class="bi bi-filetype-pdf ms-2"></i>
                     </Link>
                 </div>
-                <div class="card-body pb-0">
+                <div class="card-body pb-0 table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Customer</th>
                                 <th>Item Name</th>
+                                <th>Voucher No.</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Cost</th>
@@ -166,6 +181,7 @@
                                 <td class="text-truncate text-nowrap">
                                     {{ vl.item_name }}
                                 </td>
+                                <td>{{ vl.voucherResource.voucher_number }}</td>
                                 <td>{{ vl.unit_price }}</td>
                                 <td>{{ vl.quantity }}</td>
                                 <td>{{ vl.cost }} MMK</td>
@@ -188,11 +204,11 @@
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+                <div class="card-footer">
                     <div class="d-flex justify-content-center">
                         <Paginator :links="voucherLists.meta.links"></Paginator>
                     </div>
-                </div>
-                <div class="card-footer">
                     <div class="d-flex justify-content-end">
                         <button
                             @click="store"
@@ -222,6 +238,9 @@ import { showConfirm } from "../../Composables/showConfirm";
 import { Inertia } from "@inertiajs/inertia";
 import { showAlert } from "../../Composables/showAlert";
 import { showToast } from "../../Composables/showToast";
+import DatePicker from "vue-datepicker-next";
+import "vue-datepicker-next/index.css";
+
 export default {
     components: {
         NoDataFound,
@@ -229,6 +248,7 @@ export default {
         BarChart,
         Head,
         LineChart,
+        DatePicker,
     },
     props: [
         "todaySales",
@@ -286,7 +306,7 @@ export default {
         };
 
         let dateInputHandler = () =>
-            document.querySelector("[type=date]").showPicker();
+            document.querySelector(".mx-input").click();
 
         return {
             labels,
@@ -298,6 +318,10 @@ export default {
             dateHandler,
             today,
             dateInputHandler,
+            disabledDates: (date) => {
+                const today = new Date();
+                return date > today;
+            },
         };
     },
 };

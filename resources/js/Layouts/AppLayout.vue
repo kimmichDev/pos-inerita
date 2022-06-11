@@ -3,7 +3,7 @@
         <jet-banner />
 
         <nav
-            class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top mb-3"
+            class="navbar navbar-expand-md navbar-light blur-nav border-bottom sticky-top mb-3"
         >
             <div class="container">
                 <!-- Logo -->
@@ -315,3 +315,9 @@ export default {
     },
 };
 </script>
+<style scoped>
+.blur-nav {
+    backdrop-filter: blur(31px);
+    background: #ffffff00;
+}
+</style>
