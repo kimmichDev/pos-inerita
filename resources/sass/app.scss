@@ -2,8 +2,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
 $font-family-sans-serif: "Poppins", sans-serif;
-$border-radius: 1rem;
-$border-radius-lg: 2rem;
+$border-radius: 1.3rem;
+$border-radius-lg: 3rem;
 $border-radius-sm: 1.5rem;
 $warning: #f07613;
 $danger: #ed5575;
@@ -19,6 +19,23 @@ $success: #5fd068;
 
 @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 @import "../../node_modules/sweetalert2/dist/sweetalert2.min.css";
+
+// scroll bar
+::-webkit-scrollbar {
+    width: 5px;
+    padding: 3px;
+    border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+    opacity: 1;
+    background: rgba(37, 34, 34, 0.35);
+    border-radius: 1rem;
+}
+
+::-webkit-scrollbar-track {
+    padding: 3px;
+}
 
 .object-fit {
     object-fit: cover;

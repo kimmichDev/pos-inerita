@@ -1,5 +1,5 @@
 <template>
-    <Head title="Edit item"></Head>
+    <Head title="Create item"></Head>
     <div class="row justify-content-center mb-3">
         <div class="col-12 col-md-6">
             <div class="border p-3 shadow rounded">

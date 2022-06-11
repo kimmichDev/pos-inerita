@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\VoucherListResource;
 use App\Http\Resources\VoucherResource;
 use App\Models\DailySaleReport;
+use App\Models\Item;
 use App\Models\Voucher;
 use App\Models\VoucherList;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -37,6 +38,7 @@ class SaleController extends Controller
         // $dsr = DailySaleReport::whereMonth("date",Carbon::parse(request('month'))->format('Y-m-d');)
 
         $vl = VoucherList::where("date", $date)->latest("id")->get()->groupBy("item_name")->map(fn ($row) => $row->sum("quantity"))->toArray();
+        // return array_keys($vl, 2);
         count($vl) > 0 ? $topSeller = array_keys($vl, max($vl)) : $topSeller = ["no item"];
         // $topSeller = ["u$tnavilable"];
 
@@ -71,5 +73,42 @@ class SaleController extends Controller
         $total = $voucherLists->sum('cost');
         $pdf = Pdf::loadView("pdf.daily-voucher", ["voucherLists" => $voucherLists, "total" => $total]);
         return $pdf->download(Carbon::parse(request('date'))->format('d-M-Y') . "-daily-voucher.pdf");
+    }
+
+    public function dashboardHandle()
+    {
+        $vl = VoucherList::where("date", now()->format('Y-m-d'))->latest("id")->get()->groupBy("item_id")->map(fn ($row) => $row->sum("quantity"))->toArray();
+        if (count($vl) > 0) {
+            $topSellerItemId = array_keys($vl, max($vl))[0];
+            $topSellerItemToday = Item::where("id", $topSellerItemId)->get()->map(fn ($item) => [
+                "name" => $item->name,
+                "photo" => asset("storage/item-photo/" . $item->photo),
+                "price" => $item->price
+            ]);
+        } else {
+            $topSellerItemToday = "No item";
+        };
+
+        $voucherListMonthly = VoucherList::whereMonth("date", now()->format('m'))->latest("id")->get()->groupBy("item_id")->map(fn ($row) => $row->sum("quantity"))->toArray();
+        if (count($voucherListMonthly) > 0) {
+            $topSellerItemId = array_keys($voucherListMonthly, max($voucherListMonthly))[0];
+            $topSellerThisMonth = Item::where("id", $topSellerItemId)->get()->map(fn ($item) => [
+                "name" => $item->name,
+                "photo" => asset("storage/item-photo/" . $item->photo),
+                "price" => $item->price
+            ]);
+        } else {
+            $topSellerThisMonth = "No item";
+        };
+
+        $totalVl = VoucherList::whereMonth("date", now()->format('m'))->get();
+        count($totalVl) > 0 ?   $totalSaleAmount = $totalVl->sum('cost') : $totalSaleAmount = "No data";
+        count($totalVl) > 0 ?  $totalSaleQuantity = $totalVl->sum('quantity') : $totalSaleQuantity = "No data";
+        return Inertia::render('Dashboard', [
+            "topSellerItemToday" => $topSellerItemToday,
+            "topSellerThisMonth" => $topSellerThisMonth,
+            "totalSaleAmount" => $totalSaleAmount,
+            "totalSaleQuantity" => $totalSaleQuantity
+        ]);
     }
 }

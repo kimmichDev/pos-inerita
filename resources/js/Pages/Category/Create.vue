@@ -1,4 +1,5 @@
 <template>
+    <Head title="Create Category"></Head>
     <div class="row justify-content-center">
         <div class="col-12 col-md-6">
             <div class="border p-3 shadow rounded mb-3">

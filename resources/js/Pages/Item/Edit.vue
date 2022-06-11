@@ -113,10 +113,10 @@
 <script>
 import PhotoUploadUi from "../../Shared/PhotoUploadUi";
 import { loadPhoto } from "../../Composables/loadPhoto";
-import { Head, useForm } from "@inertiajs/inertia-vue3";
+import { useForm } from "@inertiajs/inertia-vue3";
 import { showToast } from "../../Composables/showToast";
 export default {
-    components: { PhotoUploadUi, Head },
+    components: { PhotoUploadUi },
     props: ["item", "categories", "errors"],
     setup(props) {
         let openInput = () => {

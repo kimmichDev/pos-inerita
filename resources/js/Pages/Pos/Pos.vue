@@ -1,4 +1,5 @@
 <template>
+    <Head title="POS"></Head>
     <div class="row">
         <div class="col-8">
             <PosNav
@@ -50,8 +51,7 @@ import ItemCard from "./ItemCard";
 import PosNav from "./PosNav";
 import PosLayout from "../../Layouts/PosLayout";
 import { ref } from "@vue/reactivity";
-import { computed, onMounted, watch } from "@vue/runtime-core";
-import { paginator } from "../../Composables/paginate";
+import { computed, onMounted } from "@vue/runtime-core";
 import { useStore } from "vuex";
 export default {
     components: {

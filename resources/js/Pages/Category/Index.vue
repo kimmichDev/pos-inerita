@@ -1,4 +1,5 @@
 <template>
+    <Head title="Category Lists"></Head>
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="border p-3 shadow rounded mb-3">

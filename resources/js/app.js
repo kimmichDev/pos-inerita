@@ -2,17 +2,17 @@ require('./bootstrap');
 
 // Import modules...
 import { createApp, h } from 'vue';
-import { createInertiaApp, Link } from '@inertiajs/inertia-vue3';
+import { createInertiaApp, Link, Head } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import AppLayout from "../js/Layouts/AppLayout.vue";
 import { createStore } from "vuex";
 
 import Voucher from './Modules/Voucher';
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title} - POS APP`,
     resolve: (name) => {
         let page = require(`./Pages/${name}.vue`).default;
         page.layout ??= AppLayout;
@@ -21,6 +21,7 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .component("Link", Link)
+            .component("Head", Head)
             .use(plugin)
             .use(store)
             .mixin({ methods: { route } })

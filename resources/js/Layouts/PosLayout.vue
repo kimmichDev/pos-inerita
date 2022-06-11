@@ -5,7 +5,12 @@
                 class="bg-light shadow d-flex justify-content-between align-items-center px-5 p-2"
             >
                 <div>
-                    <h3 class="mb-0">POS</h3>
+                    <img
+                        :src="logo"
+                        width="75"
+                        class="rounded-circle border border-light shadow"
+                        alt=""
+                    />
                 </div>
                 <div class="d-flex">
                     <div class="me-2">
@@ -121,7 +126,7 @@
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 export default {
-    props: ["user", "errors"],
+    props: ["user", "errors", "logo"],
     setup() {
         let store = useStore();
 

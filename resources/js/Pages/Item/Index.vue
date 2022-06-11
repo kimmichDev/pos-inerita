@@ -1,4 +1,5 @@
 <template>
+    <Head title="Item Lists"></Head>
     <div class="row justify-content-center gy-3">
         <div class="col-12">
             <div class="border p-3 shadow rounded">
