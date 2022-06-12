@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas id="barChart"></canvas>
+        <canvas id="doughnutChart"></canvas>
     </div>
 </template>
 
@@ -8,19 +8,22 @@
 import Chart from "chart.js/auto";
 import { onMounted } from "@vue/runtime-core";
 export default {
-    props: ["labels", "label", "data", "bgColor", "showX"],
+    props: ["labels", "label", "data"],
     setup(props) {
         onMounted(() => {
-            const ctx = document.getElementById("barChart");
+            const ctx = document.getElementById("doughnutChart");
             new Chart(ctx, {
-                type: "bar",
+                type: "doughnut",
                 data: {
                     labels: props.labels,
                     datasets: [
                         {
                             label: props.label,
                             data: props.data,
-                            backgroundColor: "#5686E7",
+                            backgroundColor: "#0d6efd80",
+                            hoverBackgroundColor: "#0d6efd",
+                            // borderColor: "#3184ff",
+                            hoverOffset: 0,
                         },
                     ],
                 },
@@ -28,16 +31,6 @@ export default {
                     plugins: {
                         legend: {
                             display: false,
-                        },
-                    },
-                    scales: {
-                        x: {
-                            display: props.showX,
-                        },
-                        y: {
-                            ticks: {
-                                stepSize: 1,
-                            },
                         },
                     },
                 },

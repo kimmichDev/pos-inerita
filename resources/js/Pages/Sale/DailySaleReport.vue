@@ -138,6 +138,7 @@
                                 label="Item / Quantity"
                                 :labels="totalItemName"
                                 :data="totalItemQuantity"
+                                :showX="false"
                             />
                         </div>
                     </div>
@@ -302,6 +303,7 @@ export default {
                 onSuccess: () => {
                     showToast("success", "Data updated");
                 },
+                preserveScroll: true,
             });
         };
 

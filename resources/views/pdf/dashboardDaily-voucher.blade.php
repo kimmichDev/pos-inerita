@@ -42,42 +42,30 @@
 
 <body>
     <h3 style="text-align: center">Vouchers for
-        {{ \Carbon\Carbon::parse($voucherLists[0]->voucher->date)->format('d-M-Y') }}
+        {{ \Carbon\Carbon::parse($dailyVouchers[0]->date)->format('d-M-Y') }}
     </h3>
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr style="color: #f0f0f0">
-                <th>Customer</th>
-                <th>Item Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Cost</th>
+                <th>Voucher Number</th>
+                <th>Customer Name</th>
+                <th>Total</th>
                 <th>Purchase Time</th>
                 <th>Date</th>
             </tr>
-
+        </thead>
         <tbody>
-            @foreach ($voucherLists as $vl)
+            @foreach ($dailyVouchers as $dv)
                 <tr>
-                    <td>{{ $vl->voucher->customer_name }}</td>
-                    <td>
-                        {{ $vl->item_name }}
-                    </td>
-                    <td>{{ $vl->unit_price }}</td>
-                    <td>{{ $vl->quantity }}</td>
-                    <td>{{ $vl->cost }} MMK</td>
-                    <td>{{ \Carbon\Carbon::parse($vl->voucher->date)->format('d-M') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($vl->voucher->created_at)->format('h:i a') }}</td>
+                    <td>{{ $dv->voucher_number }}</td>
+                    <td>{{ $dv->customer_name }}</td>
+                    <td>{{ $dv->total }}</td>
+                    <td>{{ $dv->created_at_time }}</td>
+                    <td>{{ \Carbon\Carbon::parse($dv->date)->format('d-M') }}</td>
                 </tr>
             @endforeach
+
         </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4" style="font-weight: bolder;text-align: center">Today Sales</td>
-                <td colspan="3" style="font-weight:bolder">{{ $total }} MMK</td>
-            </tr>
-        </tfoot>
-        </thead>
     </table>
 </body>
 

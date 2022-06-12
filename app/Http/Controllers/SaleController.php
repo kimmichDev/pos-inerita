@@ -104,11 +104,41 @@ class SaleController extends Controller
         $totalVl = VoucherList::whereMonth("date", now()->format('m'))->get();
         count($totalVl) > 0 ?   $totalSaleAmount = $totalVl->sum('cost') : $totalSaleAmount = "No data";
         count($totalVl) > 0 ?  $totalSaleQuantity = $totalVl->sum('quantity') : $totalSaleQuantity = "No data";
+
+        $dailyVoucherDate = Carbon::parse(request('dvd'))->format('Y-m-d');
+        $dailyVouchers = VoucherResource::collection(Voucher::where('date', $dailyVoucherDate)->latest('id')->paginate()->withQueryString());
+        $dailyVoucherNumber = Voucher::where('date', $dailyVoucherDate)->latest('id')->pluck("voucher_number");
+        $dailyVoucherTotal = Voucher::where('date', $dailyVoucherDate)->latest('id')->pluck("total");
+
+
+        $monthlyDsrDate = Carbon::parse(request("month"))->format('m');
+        $dsrs = DailySaleReport::whereMonth("date", $monthlyDsrDate)->latest('date')->paginate(10)->through(fn ($dsr) => [
+            "date" => Carbon::parse($dsr->date)->format('d-M-Y'),
+            "total" => $dsr->total
+        ]);
+        $dsrDate = DailySaleReport::whereMonth("date", $monthlyDsrDate)->latest('date')->pluck('date');
+        $dsrTotal = DailySaleReport::whereMonth("date", $monthlyDsrDate)->latest('date')->pluck('total');
         return Inertia::render('Dashboard', [
             "topSellerItemToday" => $topSellerItemToday,
             "topSellerThisMonth" => $topSellerThisMonth,
             "totalSaleAmount" => $totalSaleAmount,
-            "totalSaleQuantity" => $totalSaleQuantity
+            "totalSaleQuantity" => $totalSaleQuantity,
+            "dailyVouchers" => $dailyVouchers,
+            "dailyVoucherNumber" => $dailyVoucherNumber,
+            "dailyVoucherTotal" => $dailyVoucherTotal,
+            "dailySaleReports" => $dsrs,
+            "dailySaleReportDate" => $dsrDate,
+            "dailySaleReportTotal" => $dsrTotal,
+            "selectedDate" => Carbon::parse(request('dvd'))->format('d-M-Y'),
+            "selectedMonth" => Carbon::parse(request('month'))->format('M-Y')
         ]);
+    }
+
+    public function dashboardDailyVoucherPdf()
+    {
+        $date = Carbon::parse(request('date'))->format('Y-m-d');
+        $dailyVouchers = VoucherResource::collection(Voucher::where('date', $date)->latest('id')->get());
+        $pdf = Pdf::loadView("pdf.dashboardDaily-voucher", ["dailyVouchers" => $dailyVouchers]);
+        return $pdf->download(Carbon::parse(request('date'))->format('d-M-Y') . "-daily-voucher.pdf");
     }
 }

@@ -9,6 +9,7 @@ class Voucher extends Model
 {
     use HasFactory;
     protected $fillables = ['customer_name', 'voucher_number', 'date', 'total'];
+    protected $perPage = 5;
     public function voucherList()
     {
         return $this->hasMany(VoucherList::class, 'voucher_id');
