@@ -276,6 +276,12 @@
                 <div class="card-body" v-else>
                     <div class="row align-items-center">
                         <div class="col-3">
+                            <div class="alert alert-primary">
+                                <span class="small"
+                                    >Records without closed daily reports won't
+                                    show up here!.</span
+                                >
+                            </div>
                             <table class="table table-hover">
                                 <thead>
                                     <tr>

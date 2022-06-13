@@ -169,7 +169,9 @@
                                     Daily Sale Reports
                                 </jet-dropdown-link>
 
-                                <jet-dropdown-link :href="route('item.index')">
+                                <jet-dropdown-link
+                                    :href="route('monthlySaleReport')"
+                                >
                                     Monthly Sale Reports
                                 </jet-dropdown-link>
                             </template>

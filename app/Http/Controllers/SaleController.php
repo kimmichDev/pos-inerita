@@ -75,6 +75,47 @@ class SaleController extends Controller
         return $pdf->download(Carbon::parse(request('date'))->format('d-M-Y') . "-daily-voucher.pdf");
     }
 
+    public function showMonthlySaleReport()
+    {
+        $month = Carbon::parse(request('month'))->format('m');
+        $thisMonthSale = VoucherResource::collection(Voucher::whereMonth("date", $month)->get())->groupBy('date')->map(fn ($sale) => $sale->sum('total'));
+
+        $thisMonthSaleMonth = array_keys($thisMonthSale->toArray());
+        $thisMonthSaleTotal = array_values($thisMonthSale->toArray());
+        $items = VoucherListResource::collection(VoucherList::whereMonth("date", $month)->latest("id")->get());
+        // return $items;
+        $totalItem = $items->groupBy("item_id");
+        $totalItemName = [];
+        foreach ($totalItem as $key => $value) {
+            array_push($totalItemName, $value[0]->item_name);
+        }
+
+        $totalItemQuantity = [];
+        $totalItemCount = $items->groupBy("item_id")->map(fn ($row) => $row->sum("quantity"));
+
+        foreach ($totalItemCount as $key => $value) {
+            array_push($totalItemQuantity, $value);
+        }
+
+        $voucherLists = VoucherListResource::collection(VoucherList::whereMonth("date", $month)->paginate()->withQueryString());
+
+        $vl = VoucherList::whereMonth("date", $month)->latest("id")->get()->groupBy("item_name")->map(fn ($row) => $row->sum("quantity"))->toArray();
+        count($vl) > 0 ? $topSeller = array_keys($vl, max($vl)) : $topSeller = ["no item"];
+
+        return Inertia::render(
+            "Sale/MonthlySaleReport",
+            [
+                "thisMonthSaleMonth" => $thisMonthSaleMonth,
+                "thisMonthSaleTotal" => $thisMonthSaleTotal,
+                "voucherLists" => $voucherLists,
+                "totalItemQuantity" => $totalItemQuantity,
+                "totalItemName" => $totalItemName,
+                "topSeller" => $topSeller,
+                "selectedMonth" => Carbon::parse(request('month'))->format('M-Y')
+            ]
+        );
+    }
+
     public function dashboardHandle()
     {
         $vl = VoucherList::where("date", now()->format('Y-m-d'))->latest("id")->get()->groupBy("item_id")->map(fn ($row) => $row->sum("quantity"))->toArray();
