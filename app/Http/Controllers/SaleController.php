@@ -182,4 +182,15 @@ class SaleController extends Controller
         $pdf = Pdf::loadView("pdf.dashboardDaily-voucher", ["dailyVouchers" => $dailyVouchers]);
         return $pdf->download(Carbon::parse(request('date'))->format('d-M-Y') . "-daily-voucher.pdf");
     }
+
+
+    public function monthlyVoucherPdf()
+    {
+        $date = Carbon::parse(request('date'))->format('m');
+        $voucherLists = VoucherListResource::collection(VoucherList::whereMonth("date", $date)->get());
+        $total = $voucherLists->sum('cost');
+        // return view("pdf.monthly-voucher", ["voucherLists" => $voucherLists, "total" => $total]);
+        $pdf = Pdf::loadView("pdf.monthly-voucher", ["voucherLists" => $voucherLists, "total" => $total]);
+        return $pdf->download(Carbon::parse(request('date'))->format('M-Y') . "-monthly-voucher.pdf");
+    }
 }

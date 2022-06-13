@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="animate__animated animate__fadeInDown animate__faster">
         <div class="row gx-3">
             <div class="col-3">
                 <img

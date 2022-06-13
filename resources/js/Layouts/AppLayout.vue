@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="animate__animated animate__fadeIn">
         <jet-banner />
 
         <nav
@@ -8,7 +8,14 @@
             <div class="container">
                 <!-- Logo -->
                 <Link class="navbar-brand me-4" :href="route('pos')">
-                    POS
+                    <div>
+                        <img
+                            :src="logo"
+                            width="75"
+                            class="rounded-circle border border-light shadow"
+                            alt=""
+                        />
+                    </div>
                 </Link>
                 <button
                     class="navbar-toggler"
@@ -271,7 +278,7 @@ import JetNavLink from "@/Jetstream/NavLink.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 
 export default {
-    props: ["user", "title", "canRegister"],
+    props: ["logo", "user", "title", "canRegister"],
 
     components: {
         Head,
@@ -320,6 +327,6 @@ export default {
 <style scoped>
 .blur-nav {
     backdrop-filter: blur(31px);
-    background: #ffffff00;
+    background: #ffffff;
 }
 </style>

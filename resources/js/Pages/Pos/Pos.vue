@@ -1,6 +1,6 @@
 <template>
     <Head title="POS"></Head>
-    <div class="row">
+    <div class="row animate__animated animate__fadeIn">
         <div class="col-8">
             <PosNav
                 @categoryId="changeCategory"
@@ -30,7 +30,10 @@
                             <div class="card border-0 shadow">
                                 <div class="card-body">
                                     <Orders v-if="whenToMountOrders"></Orders>
-                                    <div class="" v-else>
+                                    <div
+                                        class="animate__animated animate__fadeIn"
+                                        v-else
+                                    >
                                         <h5 class="mb-0 fw-bold">
                                             No Orders 👀
                                         </h5>

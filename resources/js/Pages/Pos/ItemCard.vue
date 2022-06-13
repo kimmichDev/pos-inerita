@@ -9,7 +9,7 @@
         ]"
         @click="addToVoucher"
     >
-        <div class="card-body">
+        <div class="card-body animate__animated animate__fadeIn">
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="mb-3 overflow-hidden rounded">

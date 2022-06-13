@@ -53,6 +53,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get("/monthly-sale-report", [SaleController::class, 'showMonthlySaleReport'])->name("monthlySaleReport");
 
     Route::get("/daily-voucher-pdf", [SaleController::class, 'dailyVoucherPdf'])->name("dailyVoucher.pdf");
+    Route::get("/monthly-voucher-pdf", [SaleController::class, 'monthlyVoucherPdf'])->name("monthlyVoucher.pdf");
+
     Route::get("/dashbaord-daily-voucher-pdf", [SaleController::class, 'dashboardDailyVoucherPdf'])->name("dashboardDailyVoucher.pdf");
 });
 

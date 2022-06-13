@@ -1,17 +1,19 @@
 <template>
-    <nav class="container-fluid">
+    <nav class="container-fluid animate__animated animate__fadeIn">
         <div class="row">
             <div
                 class="bg-light shadow d-flex justify-content-between align-items-center px-5 p-2"
             >
-                <div>
-                    <img
-                        :src="logo"
-                        width="75"
-                        class="rounded-circle border border-light shadow"
-                        alt=""
-                    />
-                </div>
+                <Link class="navbar-brand me-4" :href="route('pos')">
+                    <div>
+                        <img
+                            :src="logo"
+                            width="75"
+                            class="rounded-circle border border-light shadow"
+                            alt=""
+                        />
+                    </div>
+                </Link>
                 <div class="d-flex">
                     <div class="me-2">
                         <input

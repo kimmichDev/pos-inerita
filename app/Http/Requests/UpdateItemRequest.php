@@ -27,7 +27,7 @@ class UpdateItemRequest extends FormRequest
             "name" => "required|unique:items,name," . request("item")->id,
             "price" => "required|numeric",
             "category_id" => "required|exists:categories,id",
-            "photo" => "nullable|mimes:png,jpg,webp|max:4000"
+            "photo" => "nullable|mimes:png,jpeg,jpg,webp"
         ];
     }
 }
