@@ -188,7 +188,7 @@
                                     class="mb-3 d-flex align-items-center justify-content-end"
                                 >
                                     <div>
-                                        <Link
+                                        <a
                                             :href="
                                                 route(
                                                     'dashboardDailyVoucher.pdf',
@@ -203,7 +203,7 @@
                                             <i
                                                 class="bi bi-filetype-pdf ms-2"
                                             ></i>
-                                        </Link>
+                                        </a>
                                     </div>
                                 </div>
                                 <table class="table table-hover">

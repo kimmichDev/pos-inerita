@@ -155,7 +155,7 @@
                         class="card-header d-flex justify-content-between align-items-center"
                     >
                         <span> Today Customers </span>
-                        <Link
+                        <a
                             :href="
                                 route('dailyVoucher.pdf', {
                                     date: selectedDate,
@@ -165,7 +165,7 @@
                         >
                             Export to pdf
                             <i class="bi bi-filetype-pdf ms-2"></i>
-                        </Link>
+                        </a>
                     </div>
                     <div class="card-body pb-0 table-responsive">
                         <table class="table table-hover">

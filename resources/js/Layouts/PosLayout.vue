@@ -1,5 +1,8 @@
 <template>
-    <nav class="container-fluid animate__animated animate__fadeIn">
+    <nav
+        class="container-fluid animate__animated animate__fadeIn position-relative"
+        style="z-index: 999"
+    >
         <div class="row">
             <div
                 class="bg-light shadow d-flex justify-content-between align-items-center px-5 p-2"
@@ -59,7 +62,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="dropdown">
+                    <div class="dropdown ms-2">
                         <button
                             class="btn btn-light border border-1 border-light p-1 px-3 shadow dropdown-toggle profile-btn"
                             type="button"
