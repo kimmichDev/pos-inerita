@@ -1,4 +1,12 @@
 <template>
+    <Head>
+        <meta
+            head-key="description"
+            name="description"
+            content="POS system by Laravel + Vue - InertiaJs"
+        />
+        <link rel="icon" :href="logo" />
+    </Head>
     <nav
         class="container-fluid animate__animated animate__fadeIn position-relative"
         style="z-index: 999"

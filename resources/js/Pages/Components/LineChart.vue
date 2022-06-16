@@ -21,6 +21,7 @@ export default {
                             label: props.label,
                             data: props.data,
                             backgroundColor: "#0d6efd",
+                            hoverBackgroundColor: "#0d6efd80",
                             borderColor: "#0d6efd8f",
                             borderWidth: 3,
                             pointRadius: 5,
@@ -34,6 +35,14 @@ export default {
                         y: {
                             ticks: {
                                 stepSize: 2000,
+                            },
+                            grid: {
+                                display: false,
+                            },
+                        },
+                        x: {
+                            grid: {
+                                display: false,
                             },
                         },
                     },

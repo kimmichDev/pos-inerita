@@ -20,7 +20,8 @@ export default {
                         {
                             label: props.label,
                             data: props.data,
-                            backgroundColor: "#5686E7",
+                            backgroundColor: "#0d6efd",
+                            hoverBackgroundColor: "#0d6efd80",
                         },
                     ],
                 },
@@ -33,10 +34,16 @@ export default {
                     scales: {
                         x: {
                             display: props.showX,
+                            grid: {
+                                display: false,
+                            },
                         },
                         y: {
                             ticks: {
                                 stepSize: 1,
+                            },
+                            grid: {
+                                display: false,
                             },
                         },
                     },

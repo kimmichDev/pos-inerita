@@ -180,6 +180,7 @@
                                     <DoughnutChart
                                         :labels="dailyVoucherNumber"
                                         :data="dailyVoucherTotal"
+                                        :chart-total="DoughnutChartInsideText"
                                     />
                                 </div>
                             </div>
@@ -346,6 +347,7 @@ import DatePicker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
 import { showToast } from "../Composables/showToast";
 import { ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
 export default {
     components: {
         BarChart,
@@ -377,6 +379,11 @@ export default {
                     ...bgColors.value,
                     "hsl(" + Math.random() * 360 + ", 100%, 75%,0.5)",
                 ])
+        );
+        let DoughnutChartInsideText = computed(
+            () =>
+                props.dailyVoucherTotal.reduce((cv, pv) => cv + Number(pv), 0) +
+                " MMK"
         );
         let form = useForm({
             dvd: props.selectedDate,
@@ -426,6 +433,7 @@ export default {
             monthInputHandler,
             disabledDates,
             bgColors,
+            DoughnutChartInsideText,
         };
     },
 };

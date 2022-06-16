@@ -119,11 +119,12 @@ class SaleController extends Controller
     public function dashboardHandle()
     {
         $vl = VoucherList::where("date", now()->format('Y-m-d'))->latest("id")->get()->groupBy("item_id")->map(fn ($row) => $row->sum("quantity"))->toArray();
+
         if (count($vl) > 0) {
             $topSellerItemId = array_keys($vl, max($vl))[0];
             $topSellerItemToday = Item::where("id", $topSellerItemId)->get()->map(fn ($item) => [
                 "name" => $item->name,
-                "photo" => asset("storage/item-photo/" . $item->photo),
+                "photo" => is_null($item->photo) ? asset("storage/item-photo/default-item.png") : asset("storage/item-photo/" . $item->photo),
                 "price" => $item->price
             ]);
         } else {
@@ -135,7 +136,7 @@ class SaleController extends Controller
             $topSellerItemId = array_keys($voucherListMonthly, max($voucherListMonthly))[0];
             $topSellerThisMonth = Item::where("id", $topSellerItemId)->get()->map(fn ($item) => [
                 "name" => $item->name,
-                "photo" => asset("storage/item-photo/" . $item->photo),
+                "photo" => is_null($item->photo) ? asset("storage/item-photo/default-item.png") : asset("storage/item-photo/" . $item->photo),
                 "price" => $item->price
             ]);
         } else {

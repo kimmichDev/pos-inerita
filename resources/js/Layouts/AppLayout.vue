@@ -1,4 +1,7 @@
 <template>
+    <Head>
+        <link rel="icon" :href="logo" />
+    </Head>
     <div class="animate__animated animate__fadeIn">
         <jet-banner />
 
@@ -250,11 +253,7 @@
                             Log in
                         </Link>
 
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="ms-4 text-muted"
-                        >
+                        <Link :href="route('register')" class="ms-4 text-muted">
                             Register
                         </Link>
                     </ul>

@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::resource("/item", ItemController::class);
 
-    Route::get("/", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::latest('id')->get()), "categories" => Category::all()]))->name('pos')->middleware("dailySaleReport");
+    Route::get("/", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::latest('id')->get()), "categories" => Category::all(), 'canRegister' => Route::has('register')]))->name('pos')->middleware("dailySaleReport");
 
     Route::resource("/voucher", VoucherController::class);
 

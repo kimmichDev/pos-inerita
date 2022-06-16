@@ -51,14 +51,17 @@
                             <td>{{ item.category.name }}</td>
                             <td>
                                 <Link
-                                    class="btn btn-primary me-2"
+                                    :class="[
+                                        'btn btn-primary me-2',
+                                        { disabled: !item.can_update },
+                                    ]"
                                     :href="route('item.edit', item.id)"
                                 >
                                     <i class="bi bi-pen"></i>
                                     Edit
                                 </Link>
                                 <button
-                                    :disabled="isUploading"
+                                    :disabled="isUploading || !item.can_delete"
                                     class="btn btn-danger text-light"
                                     @click="delConfirm(item.id)"
                                 >

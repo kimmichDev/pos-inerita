@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Category;
 use App\Models\Item;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -20,7 +21,23 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Item/Index", ["items" => ItemResource::collection(Item::with('category')->get())]);
+        return Inertia::render(
+            "Item/Index",
+            ["items" => Item::all()->map(function ($item) {
+                return [
+                    "id" => $item->id,
+                    "name" => ucfirst($item->name),
+                    "price" => $item->price,
+                    "category_id" => $item->category_id,
+                    "category" => $item->category,
+                    "photo" => is_null($item->photo) ? asset("storage/item-photo/default-item.png") : asset("storage/item-photo/" . $item->photo),
+                    "created_at_date" => $item->created_at->format('d-M-Y'),
+                    "created_at_time" => $item->created_at->format('h:m:i a'),
+                    "can_update" => Auth::user()->can('update', $item),
+                    "can_delete" => Auth::user()->can('delete', $item)
+                ];
+            })]
+        );
     }
 
     /**

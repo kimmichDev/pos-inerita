@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ItemResource extends JsonResource
 {
@@ -22,7 +24,7 @@ class ItemResource extends JsonResource
             "category" => $this->category,
             "photo" => is_null($this->photo) ? asset("storage/item-photo/default-item.png") : asset("storage/item-photo/" . $this->photo),
             "created_at_date" => $this->created_at->format('d-M-Y'),
-            "created_at_time" => $this->created_at->format('h:m:i a')
+            "created_at_time" => $this->created_at->format('h:m:i a'),
         ];
     }
 }
