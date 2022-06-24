@@ -36,12 +36,25 @@ class HandleInertiaRequests extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
+    protected $role;
     public function share(Request $request): array
     {
+        if (Auth::check()) {
+            if (Auth::user()->role == 1) {
+                $this->role = "cashier";
+            } elseif (Auth::user()->role == 2) {
+                $this->role = "manager";
+            } else {
+                $this->role = "admin";
+            };
+        }
+
         return array_merge(parent::share($request), [
 
             "user" => Auth::user(),
-            "logo" => asset("storage/misc/logo.png")
+            "logo" => asset("storage/misc/logo.png"),
+            "role" => $this->role
         ]);
     }
 }

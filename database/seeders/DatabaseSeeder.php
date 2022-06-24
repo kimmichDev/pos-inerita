@@ -24,17 +24,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // User::create([
-        //     "name" => "kim",
-        //     "email" => "admin@gmail.com",
-        //     "password" => Hash::make("swsxswsx")
-        // ]);
+        User::create([
+            "name" => "kim",
+            "email" => "admin@gmail.com",
+            "password" => Hash::make("swsxswsx"),
+            "role" => 3,
+        ]);
 
-        // User::create([
-        //     "name" => "james",
-        //     "email" => "james@gmail.com",
-        //     "password" => Hash::make("swsxswsx")
-        // ]);
+        User::create([
+            "name" => "admin",
+            "email" => "james@gmail.com",
+            "password" => Hash::make("swsxswsx"),
+            "role" => 2,
+        ]);
 
 
         // $categories = ["Coffe based", "Tea based", "Kitchen's made"];
@@ -46,15 +48,15 @@ class DatabaseSeeder extends Seeder
 
 
         // item
-        $datas = Http::get("https://api.openbrewerydb.org/breweries")->object();
-        for ($i = 0; $i < 10; $i++) {
-            Item::create([
-                "name" => $datas[$i]->name . " add-on",
-                "price" => rand(1000, 2000),
-                "category_id" => Category::where("id", rand(1, 3))->first()->id,
-                "user_id" => rand(1, 2)
-            ]);
-        }
+        // $datas = Http::get("https://api.openbrewerydb.org/breweries")->object();
+        // for ($i = 0; $i < 1000; $i++) {
+        //     Item::create([
+        //         "name" => Str::random(7) . " add-on",
+        //         "price" => rand(1000, 2000),
+        //         "category_id" => Category::where("id", rand(1, 3))->first()->id,
+        //         "user_id" => rand(1, 2)
+        //     ]);
+        // }
         // foreach ($datas as $d) {
         //     Item::create([
         //         "name" => $d->name,

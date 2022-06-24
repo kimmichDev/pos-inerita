@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <div class="mb-0">
+                <div class="mb-3">
                     <div
                         class="d-flex justify-content-end align-items-baseline"
                     >
@@ -82,6 +82,16 @@
                             Log in
                         </jet-button>
                     </div>
+                </div>
+                <hr class="w-75" />
+                <div>
+                    <a
+                        class="btn btn-primary"
+                        :href="route('auth.social', ['google'])"
+                    >
+                        <i class="bi bi-google"></i>
+                        <span class="ms-2">Login with google</span>
+                    </a>
                 </div>
             </form>
         </div>

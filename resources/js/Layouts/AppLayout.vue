@@ -277,7 +277,7 @@ import JetNavLink from "@/Jetstream/NavLink.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
 
 export default {
-    props: ["logo", "user", "title", "canRegister"],
+    props: ["logo", "user", "title", "canRegister", "role"],
 
     components: {
         Head,

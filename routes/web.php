@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SaleController;
@@ -36,15 +37,11 @@ use Inertia\Inertia;
 //     ]);
 // });
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
-    Route::get('/dashboard', [SaleController::class, 'dashboardHandle'])->name('dashboard');
-
-    Route::resource("/category", CategoryController::class);
-
-    Route::resource("/item", ItemController::class);
-
+Route::middleware('auth')->group(function () {
     Route::get("/", fn () => Inertia::render("Pos/Pos", ["items" => ItemResource::collection(Item::latest('id')->get()), "categories" => Category::all(), 'canRegister' => Route::has('register')]))->name('pos')->middleware("dailySaleReport");
+});
 
+Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::resource("/voucher", VoucherController::class);
 
     Route::get("/daily-sale-report", [SaleController::class, 'showDailySaleReport'])->name("dailySaleReport");
@@ -58,7 +55,19 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get("/dashbaord-daily-voucher-pdf", [SaleController::class, 'dashboardDailyVoucherPdf'])->name("dashboardDailyVoucher.pdf");
 });
 
-
-Route::get("/test", function () {
-    return VoucherList::whereMonth("date", Carbon::parse("2022-05-11")->format('m'))->get();
+Route::middleware(['auth', 'isManager'])->group(function () {
+    Route::resource("/category", CategoryController::class);
+    Route::resource("/item", ItemController::class);
 });
+
+
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
+    Route::get('/dashboard', [SaleController::class, 'dashboardHandle'])->name('dashboard');
+});
+
+Route::get("/test", fn () => dd(auth()->user()->role));
+
+Route::get('/auth/redirect/{provider}', [SocialAuthController::class, 'redirect'])->middleware('cors')->name('auth.social');
+Route::get('/auth/callback/{provider}', [SocialAuthController::class, 'handleAuth']);
+
+// Route::get("/register", fn () => dd("ok"));

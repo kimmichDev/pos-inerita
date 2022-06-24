@@ -95,7 +95,15 @@
                                     <p
                                         class="text-left small text-black-50 mb-0"
                                     >
-                                        Cashier
+                                        <span v-if="role == 'cashier'">
+                                            Cashier</span
+                                        >
+                                        <span v-if="role == 'manager'">
+                                            Manager</span
+                                        >
+                                        <span v-if="role == 'admin'">
+                                            Admin</span
+                                        >
                                     </p>
                                     <p class="text-left mb-0 fw-bold">
                                         {{ user.name }}
@@ -107,7 +115,10 @@
                             class="dropdown-menu"
                             aria-labelledby="dropdownMenuButton2"
                         >
-                            <li class="px-2">
+                            <li
+                                class="px-2"
+                                v-if="role == 'manager' || role == 'admin'"
+                            >
                                 <Link
                                     class="dropdown-item rounded"
                                     :href="route('dashboard')"
@@ -139,7 +150,7 @@
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 export default {
-    props: ["user", "errors", "logo"],
+    props: ["user", "errors", "logo", "role"],
     setup() {
         let store = useStore();
 
