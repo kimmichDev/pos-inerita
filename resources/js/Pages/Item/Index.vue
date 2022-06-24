@@ -29,7 +29,7 @@
                             <td>Price</td>
                             <td>Photo</td>
                             <td>Category</td>
-                            <td>Action</td>
+                            <td class="text-nowrap">Action</td>
                             <td>Create At</td>
                         </tr>
                     </thead>
@@ -49,7 +49,7 @@
                                 />
                             </td>
                             <td>{{ item.category.name }}</td>
-                            <td>
+                            <td class="text-nowrap">
                                 <Link
                                     :class="[
                                         'btn btn-primary me-2',

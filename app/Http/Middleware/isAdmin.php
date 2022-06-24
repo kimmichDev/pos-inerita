@@ -17,7 +17,7 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::user()->role < 2) {
+        if (Auth::user()->role <= 2) {
             return redirect()->route('pos');
         }
         return $next($request);

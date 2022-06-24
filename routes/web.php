@@ -58,12 +58,9 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 Route::middleware(['auth', 'isManager'])->group(function () {
     Route::resource("/category", CategoryController::class);
     Route::resource("/item", ItemController::class);
-});
-
-
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
     Route::get('/dashboard', [SaleController::class, 'dashboardHandle'])->name('dashboard');
 });
+
 
 Route::get("/test", fn () => dd(auth()->user()->role));
 
